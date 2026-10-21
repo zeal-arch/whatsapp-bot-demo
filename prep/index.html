@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>firstbriq Round 2 Prep</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Nunito:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a whiteboard. White board with a faint dot grid, marker-coloured handwriting for headings,
+   plain outlined boxes, and yellow sticky notes for the key lines. Single light theme on purpose. */
+:root{
+  color-scheme:light;
+  --bg:#ffffff;          /* board surface */
+  --dot:#dde2e6;         /* faint grid dots */
+  --panel:#ffffff;
+  --ink:#24292e;         /* black marker */
+  --muted:#5f6871;
+  --line:#c9d0d6;
+  --accent:#1f5fbf;      /* blue marker */
+  --accent-soft:#e6eefb;
+  --brass:#c8372d;       /* red marker */
+  --brass-soft:#fff6b3;  /* sticky note */
+  --ok:#2e7d4f; --warn:#b26a00; --bad:#c8372d;
+  --ok-soft:#e5f3ea; --warn-soft:#fdf0d8; --bad-soft:#fbe4e2;
+  --code-bg:#f6f8f9;
+  --f-display:"Kalam", "Comic Sans MS", "Chalkboard SE", cursive;
+  --f-body:"Nunito", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--bg) radial-gradient(var(--dot) 1px, transparent 1.2px) 0 0/22px 22px;color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{padding-block:32px 18px}
+.eyebrow{font-family:var(--f-display);font-size:17px;color:var(--brass)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(34px,5.4vw,52px);line-height:1.05;margin:.1em 0 .3em;text-wrap:balance;color:var(--accent)}
+h2{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,3.6vw,34px);line-height:1.15;margin:0 0 .5em;text-wrap:balance;display:inline;background:linear-gradient(transparent 62%, var(--brass-soft) 62%, var(--brass-soft) 92%, transparent 92%)}
+h2 + *{margin-top:14px}
+h3{font-family:var(--f-display);font-weight:700;font-size:23px;margin:1.4em 0 .4em;text-wrap:balance;color:var(--accent)}
+p{margin:.4em 0 .8em;max-width:68ch}
+.lede{color:var(--muted);font-size:18px;max-width:62ch}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:3px 11px;font-size:14px;color:var(--muted)}
+.chip b{color:var(--ink)}
+
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:2px solid var(--ink)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;font:600 15px var(--f-body);color:var(--muted);background:none;border:1px solid transparent;border-radius:8px;padding:7px 12px;cursor:pointer;white-space:nowrap}
+nav.tabs button:hover{color:var(--ink);background:var(--panel)}
+nav.tabs button[aria-selected="true"]{color:var(--accent);background:var(--panel);border:2px solid var(--accent);border-radius:14px 10px 12px 9px}
+button:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+main section{padding-block:28px 64px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:var(--panel);border:2px solid var(--line);border-radius:12px 9px 14px 10px;padding:16px 18px;min-width:0}
+.card h4{font-family:var(--f-display);font-size:18px;margin:0 0 6px}
+.card p{margin:.2em 0 .5em;font-size:16px}
+.quote{background:var(--brass-soft);padding:14px 18px;border-radius:2px;margin:16px 0;max-width:72ch;box-shadow:0 2px 6px rgba(36,41,46,.12)}
+.quote p{margin:0}
+.small{font-size:14px;color:var(--muted)}
+.label{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+
+/* story flow */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;counter-reset:step}
+.flow .step{background:var(--panel);border:2px solid var(--ink);border-radius:14px 10px 12px 9px;padding:12px 14px;position:relative}
+.flow .step::before{counter-increment:step;content:counter(step);font-family:var(--f-mono);font-size:12px;color:var(--brass);display:block;margin-bottom:4px}
+.flow .step b{display:block;font-family:var(--f-display);font-size:16.5px}
+.flow .step span{font-size:14.5px;color:var(--muted)}
+
+/* pipeline */
+.pipe{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+.pipe button{font:600 15px var(--f-body);background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer;display:flex;gap:8px;align-items:center}
+.pipe button .n{font-family:var(--f-mono);font-size:12px;color:var(--brass)}
+.pipe button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.detail{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.detail ul{margin:.3em 0 .3em 1.1em;padding:0}
+.detail li{margin:.25em 0}
+
+/* demo */
+.demo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:14px}
+@media (max-width:760px){.demo{grid-template-columns:1fr}}
+.msgs{display:flex;flex-direction:column;gap:8px}
+.msg{text-align:left;font:16px var(--f-body);color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:12px 12px 12px 4px;padding:10px 12px;cursor:pointer}
+.msg .who{font-weight:700;font-size:13.5px;color:var(--accent)}
+.msg .kind{font-family:var(--f-mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-left:6px}
+.msg[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.out{display:flex;flex-direction:column;gap:10px;min-width:0}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font:13.5px/1.5 var(--f-mono);overflow-x:auto;margin:0;white-space:pre}
+.verdict{display:flex;gap:10px;align-items:flex-start;border-radius:10px;padding:10px 12px;border:1px solid var(--line)}
+.verdict .pill{flex:0 0 auto;font:700 12px var(--f-mono);letter-spacing:.05em;padding:3px 9px;border-radius:999px;text-transform:uppercase}
+.v-auto{background:var(--ok-soft)} .v-auto .pill{background:var(--ok);color:var(--panel)}
+.v-pm{background:var(--warn-soft)} .v-pm .pill{background:var(--warn);color:var(--panel)}
+.v-ask{background:var(--accent-soft)} .v-ask .pill{background:var(--accent);color:var(--panel)}
+.v-ignore{background:var(--code-bg)} .v-ignore .pill{background:var(--muted);color:var(--panel)}
+.v-dup{background:var(--bad-soft)} .v-dup .pill{background:var(--bad);color:var(--panel)}
+.reply{font-size:15px;background:var(--panel);border:1px dashed var(--line);border-radius:10px;padding:8px 12px}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:15.5px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--code-bg)}
+tr:last-child td{border-bottom:0}
+td code,p code,li code{font-family:var(--f-mono);font-size:.86em;background:var(--code-bg);border:1px solid var(--line);border-radius:5px;padding:0 4px}
+
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 14px}
+.filters button{font:600 14px var(--f-body);border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:5px 12px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+.co .tag{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--brass)}
+.co .lesson{border-top:1px solid var(--line);margin-top:8px;padding-top:8px;font-size:15.5px}
+.co .lesson b{color:var(--accent)}
+
+/* observations */
+.obs{display:grid;gap:10px}
+details.ob{background:var(--panel);border:1px solid var(--line);border-radius:12px}
+details.ob summary{cursor:pointer;list-style:none;padding:12px 16px;display:flex;gap:10px;align-items:flex-start}
+details.ob summary::-webkit-details-marker{display:none}
+details.ob summary .sev{flex:0 0 auto;font:700 11px var(--f-mono);text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:999px;margin-top:3px}
+.sev-top{background:var(--accent);color:var(--panel)} .sev-mid{background:var(--brass-soft);color:var(--brass)} .sev-fix{background:var(--bad-soft);color:var(--bad)} .sev-like{background:var(--ok-soft);color:var(--ok)}
+details.ob summary b{font-family:var(--f-display);font-size:17px;font-weight:700}
+details.ob .body{padding:0 16px 14px 16px}
+.oshape{display:grid;grid-template-columns:110px minmax(0,1fr);gap:4px 12px;font-size:15.5px}
+.oshape dt{font-family:var(--f-mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding-top:3px}
+.oshape dd{margin:0}
+@media (max-width:520px){.oshape{grid-template-columns:1fr}.oshape dd{margin-bottom:6px}}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.stat .v{font-family:var(--f-display);font-weight:700;font-size:32px;color:var(--brass);font-variant-numeric:tabular-nums;line-height:1.1}
+.stat .k{font-size:14.5px;color:var(--muted)}
+
+/* flashcards */
+.fc{display:grid;gap:10px}
+.fc .card{cursor:pointer}
+.fc .q{font-family:var(--f-display);font-weight:700;font-size:17.5px}
+.fc .a{margin-top:8px;font-size:16px}
+.fc .hint{font-size:13px;color:var(--muted);margin-top:6px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.btn{font:600 14.5px var(--f-body);border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:6px 12px;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+
+/* timer */
+.timeline{display:flex;flex-direction:column;gap:6px}
+.tl{display:grid;grid-template-columns:72px minmax(0,1fr);gap:12px;align-items:start;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.tl .t{font:600 14px var(--f-mono);color:var(--brass);font-variant-numeric:tabular-nums}
+.tl.now{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.clock{font:700 40px var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* checklist */
+.check{display:flex;flex-direction:column;gap:6px}
+.check label{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer}
+.check input{margin-top:4px;accent-color:var(--accent);width:18px;height:18px;flex:0 0 auto}
+.check label.done span{color:var(--muted);text-decoration:line-through}
+.progress{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0 14px}
+.progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+footer{padding-block:20px 40px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Round 2 · 45-minute video discussion</div>
+    <h1>firstbriq interview prep</h1>
+    <p class="lede">Everything for the three parts of the mail: the WhatsApp bot and lead management, product ideas for firstbriq, and the Indian interiors industry. Click through the tabs; each one is short.</p>
+    <div class="meta-row">
+      <span class="chip"><b>No coding</b> needed: it is a discussion</span>
+      <span class="chip">Site checked live <b>21 Oct 2026</b></span>
+      <span class="chip">Company numbers are <b>their claims</b></span>
+    </div>
+  </header>
+</div>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="wrap" role="tablist">
+    <button role="tab" data-tab="story">The story</button>
+    <button role="tab" data-tab="bot">WhatsApp bot</button>
+    <button role="tab" data-tab="erp">ERP &amp; SaaS</button>
+    <button role="tab" data-tab="leads">Lead management</button>
+    <button role="tab" data-tab="site">firstbriq review</button>
+    <button role="tab" data-tab="cos">Companies</button>
+    <button role="tab" data-tab="industry">Industry</button>
+    <button role="tab" data-tab="practice">Practice</button>
+    <button role="tab" data-tab="day">On the day</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- STORY -->
+<section id="story" role="tabpanel">
+  <h2>What firstbriq is, and how both problems fit</h2>
+  <div class="quote"><p>“firstbriq is India's home interior planning platform. Homeowners use it to estimate costs, plan rooms, compare materials, and set realistic budgets, all before talking to a single vendor.” <span class="small">(their LinkedIn)</span></p></div>
+  <div class="grid g2">
+    <div class="card"><div class="label">Side 1</div><h4>Homeowners</h4><p>Plan rooms, see costs, compare materials, set a budget, find verified designers. Bengaluru only for now.</p></div>
+    <div class="card"><div class="label">Side 2</div><h4>Interior design firms</h4><p>Get clients who already know their scope and budget. Firms build profiles with portfolio, warranty, timeline and payment terms.</p></div>
+  </div>
+  <h3>The full story to tell in the interview</h3>
+  <div class="flow">
+    <div class="step"><b>Homeowner plans</b><span>Budget, rooms, materials on firstbriq</span></div>
+    <div class="step"><b>AI qualifies the lead</b><span>Confirms gaps on WhatsApp in their language</span></div>
+    <div class="step"><b>Match to 2–3 firms</b><span>By area, budget, style, capacity</span></div>
+    <div class="step"><b>Project runs on WhatsApp</b><span>Bot records purchases, costs, progress</span></div>
+    <div class="step"><b>Plan vs actual</b><span>Homeowner sees budget against real spend</span></div>
+    <div class="step"><b>Better estimates</b><span>Real costs improve the next homeowner's plan</span></div>
+  </div>
+  <p class="small" style="margin-top:12px">Steps 2–3 are the lead-management question. Steps 4–5 are your round-1 WhatsApp bot. Step 6 is why it matters to firstbriq's business.</p>
+  <h3>Questions to ask them</h3>
+  <div class="grid g2">
+    <div class="card"><p>“Is the WhatsApp bot meant as a SaaS product for design firms, or an internal tool?”</p></div>
+    <div class="card"><p>“Who pays today: homeowners, design firms (per lead or subscription), or brands?”</p></div>
+    <div class="card"><p>“How do you verify a designer now, and how much of it is manual?”</p></div>
+    <div class="card"><p>“Which system would the bot write into: your own, or firms' Tally / Zoho / Excel?”</p></div>
+  </div>
+</section>
+
+<!-- BOT -->
+<section id="bot" role="tabpanel" hidden>
+  <h2>The WhatsApp → ERP bot</h2>
+  <div class="quote"><p><b>30-second answer:</b> the project manager is acting as a human data-entry layer between WhatsApp and the ERP. The bot turns every text, voice note and bill photo into a record (who, what item, how many, rate, amount, which project). It posts on its own only when it is confident, sends the rest to a one-tap review queue, and never guesses on money.</p></div>
+  <p><a href="../index.html" style="font-family:var(--f-display);font-size:22px;color:var(--brass);font-weight:700">Open the live bot demo →</a> <span class="small">A busy project group, what the bot does with each message, and where the data lands in the ERP.</span></p>
+
+  <h3>Pipeline: click a step</h3>
+  <div class="pipe" id="pipe"></div>
+  <div class="detail" id="pipeDetail"></div>
+
+  <h3>Try it: click a message to see what the bot does</h3>
+  <p class="small">Example messages from an imaginary project “HSR 3BHK”. The outputs are written by hand to show the design, not produced by a real model.</p>
+  <div class="demo">
+    <div class="msgs" id="msgs"></div>
+    <div class="out">
+      <pre id="json"></pre>
+      <div id="verdict"></div>
+      <div class="reply" id="reply"></div>
+    </div>
+  </div>
+
+  <h3>How the bot decides</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Situation</th><th>Decision</th></tr></thead>
+    <tbody>
+      <tr><td>“ok”, 👍, good morning</td><td>Ignore, keep for context</td></tr>
+      <tr><td>Bill photo, items add up, known vendor, normal price</td><td><b>Auto-post</b> as draft or entry, confirm in chat</td></tr>
+      <tr><td>Amount only in a voice note, no bill</td><td>Record as “claimed”, ask sender for the bill</td></tr>
+      <tr><td>Total ≠ sum of items, or rate far from usual</td><td><b>PM review</b>, show both numbers</td></tr>
+      <tr><td>Vendor or project unclear</td><td>Ask one short question in the sender's language</td></tr>
+      <tr><td>Same bill twice (same image or vendor + amount + date)</td><td>Mark duplicate, never double-count</td></tr>
+      <tr><td>Correction: “12 nahi 10 sheet”</td><td>Update earlier record, keep history</td></tr>
+      <tr><td>Payment or change request</td><td>Never auto-approve, send to PM with summary</td></tr>
+      <tr><td>Any amount above a limit (e.g. ₹50,000)</td><td>PM approval in phase 1</td></tr>
+    </tbody>
+  </table></div>
+  <p style="margin-top:12px"><b>Where confidence comes from</b> (strongest first): numbers that agree with each other (items add up, bill total = voice amount) → lookups (vendor known, price in normal range) → the model's own confidence, last.</p>
+
+  <h3>Getting messages in: the real limit</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Way in</th><th>Good</th><th>Problem</th></tr></thead>
+    <tbody>
+      <tr><td>Official Groups API</td><td>Allowed by Meta</td><td>Business creates its own groups only, max 8 people, invite link, Official Business Account needed</td></tr>
+      <tr><td>People forward to a 1:1 bot number</td><td>Works today, clear intent</td><td>People must remember to forward</td></tr>
+      <tr><td>PM uploads chat export</td><td>No behaviour change</td><td>Not real-time</td></tr>
+      <tr><td>Linked device (scan QR), as Velora does</td><td>Reads existing big groups</td><td>Breaks WhatsApp terms, number can be banned</td></tr>
+    </tbody>
+  </table></div>
+  <p style="margin-top:12px"><b>Say:</b> pilot with forward-to-bot + chat export, keep a small core-team official group, and be open about the risk of the linked-device route.</p>
+
+  <h3>Cost, law, testing</h3>
+  <div class="grid g3">
+    <div class="card"><h4>Cost</h4><p>About <b>₹1–2</b> of AI cost per voice note or bill at list prices (Sarvam speech ₹30/hour). Cheap classifier first; vision model only for bills. Rough estimate, not measured.</p></div>
+    <div class="card"><h4>DPDP law</h4><p>Rules notified Nov 2025. Consent managers from <b>13 Nov 2026</b>; main duties (notice, consent, breach reporting, deletion) from <b>13 May 2027</b>. Tell group members a bot is present.</p></div>
+    <div class="card"><h4>Testing</h4><p>Label 200–300 real messages from 3–4 projects. Measure each field (amount, qty, vendor, project). Split by <b>project</b>. Start in shadow mode; switch on auto-post one category at a time.</p></div>
+  </div>
+</section>
+
+<!-- ERP -->
+<section id="erp" role="tabpanel" hidden>
+  <h2>ERP, SaaS and APIs in plain words</h2>
+  <div class="grid g2">
+    <div class="card"><div class="label">ERP</div><h4>Enterprise Resource Planning</h4><p>One central system where a firm records its operations: projects, purchases, stock, vendors, money. One purchase entry updates project cost, vendor balance, stock and accounts together.</p><p class="small">India: Tally, Zoho Books, Odoo, SAP Business One; construction: Onsite, Powerplay, RDash. Many small firms still use Excel + WhatsApp + Tally.</p></div>
+    <div class="card"><div class="label">SaaS</div><h4>Software as a Service</h4><p>Online software paid monthly. Data is on the provider's cloud; they do updates. Inside: screens → backend rules → database. <b>Multi-tenant</b>: many firms share one system but each sees only its own data, so every record has a company id and a project id.</p></div>
+  </div>
+  <h3>ERP modules for an interior firm</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Module</th><th>Records</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>Projects</td><td>Client projects, stages, deadlines</td><td>HSR 3BHK, kitchen stage</td></tr>
+      <tr><td>Purchase</td><td>What was ordered, from whom, price</td><td>20 sheets BWP ply, Raju Traders, ₹54,000</td></tr>
+      <tr><td>Inventory</td><td>Material and where it is</td><td>8 ply sheets left at site</td></tr>
+      <tr><td>Vendors</td><td>Suppliers and workers</td><td>Raju (ply), Suresh (carpenter)</td></tr>
+      <tr><td>Accounts</td><td>Bills, payments, GST</td><td>Paid Suresh ₹30,000 advance</td></tr>
+      <tr><td>Budget</td><td>Planned vs actual</td><td>Kitchen ₹3L planned, ₹2.4L spent</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Words to know: click to open</h3>
+  <div class="obs" id="glossary"></div>
+  <h3>The API call the bot makes</h3>
+<pre>POST https://erp.example.com/api/purchases
+Authorization: Bearer &lt;this firm's key&gt;
+{
+  "project_id": "PRJ-104",
+  "vendor_id": "V-221",
+  "items": [{"name": "BWP ply 18mm", "qty": 20, "rate": 2700}],
+  "total": 54000,
+  "status": "draft",
+  "source": "whatsapp", "message_id": "wamid.ABC123"
+}
+→ {"purchase_id": "PUR-889", "status": "draft"}</pre>
+  <div class="quote"><p><b>One line to remember:</b> the ERP is the source of truth; the bot is a smart data-entry assistant that talks to the ERP's API, creates drafts, and lets the PM approve.</p></div>
+</section>
+
+<!-- LEADS -->
+<section id="leads" role="tabpanel" hidden>
+  <h2>AI-powered lead management</h2>
+  <p>This is firstbriq's core business (“better-qualified clients”). Expect deep questions. Start from the data the homeowner already gave while planning, so the AI only confirms and fills gaps.</p>
+  <h3>The funnel: click a stage</h3>
+  <div class="pipe" id="funnel"></div>
+  <div class="detail" id="funnelDetail"></div>
+
+  <h3>Try it: score a lead</h3>
+  <p class="small">A simple example of how a score could be built. The weights are made up for discussion, not from any real system.</p>
+  <div class="grid g2">
+    <div class="card" id="scoreForm"></div>
+    <div class="card"><div class="label">Lead score</div><div class="clock" id="scoreVal">0</div><div id="scoreBand" style="margin:6px 0 10px"></div><div id="scoreWhy" class="small"></div></div>
+  </div>
+
+  <h3>Lessons from others</h3>
+  <div class="grid g3">
+    <div class="card"><h4>Angi / HomeAdvisor</h4><p>Sold the same lead to many pros. The FTC ordered up to $7.2M (2023) over lead quality. In 2025 Angi let homeowners choose instead. <b>Lead quality is the product.</b></p></div>
+    <div class="card"><h4>AI receptionists (US)</h4><p>Avoca ($1B valuation, 2026), Hatch (bought by Yelp ~$270M, 2026): answer every enquiry fast and qualify it. <b>Speed matters</b>, but the “21x in 5 minutes” figure is a 2007 industry study; don't quote it as research.</p></div>
+    <div class="card"><h4>Indian CRMs</h4><p>TeleCRM (~₹799/user/month), LeadSquared, Kylas, Sell.do: built for real estate. None publishes proof its AI scoring works. <b>No interiors-specific tool found.</b></p></div>
+  </div>
+  <h3>Rules and costs in India</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Item</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr><td>WhatsApp marketing message</td><td>≈ ₹0.86 each + GST (from 1 Jul 2026)</td></tr>
+      <tr><td>WhatsApp utility message</td><td>≈ ₹0.115 each + GST; from 1 Oct 2026 service replies beyond 1,000/month are charged</td></tr>
+      <tr><td>Voice AI agents</td><td>≈ ₹2–7 per minute (Bolna, Ringg, Sarvam)</td></tr>
+      <tr><td>Calls (TRAI, Feb 2025)</td><td>Promotional calls from 140-series numbers, transactional from 1600-series; heavy penalties for misuse</td></tr>
+      <tr><td>Consent (DPDP)</td><td>Get clear consent when the homeowner submits the form; let them opt out</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- SITE -->
+<section id="site" role="tabpanel" hidden>
+  <h2>firstbriq: what I saw on the live site</h2>
+  <p>Checked on 21 Oct 2026: home page, designers page and the signed-in Studio. Use this shape for each point: <b>what I noticed → why it matters → suggestion → how to measure.</b> Lead with your top two. Start with something you liked.</p>
+  <div class="filters" id="obsFilter"></div>
+  <div class="obs" id="obsList"></div>
+</section>
+
+<!-- COMPANIES -->
+<section id="cos" role="tabpanel" hidden>
+  <h2>Companies to know</h2>
+  <p>In the interview, pick four and give one clear lesson each. Filter by group.</p>
+  <div class="filters" id="coFilter"></div>
+  <div class="grid g3" id="coList"></div>
+  <div class="quote" style="margin-top:16px"><p><b>Closing line:</b> the winners vet hard, keep money with a neutral party, and don't sell bad leads. firstbriq already starts from planning and verification; the next step is turning planning data into honest prices and qualified leads, and later into project tracking.</p></div>
+</section>
+
+<!-- INDUSTRY -->
+<section id="industry" role="tabpanel" hidden>
+  <h2>The Indian home interiors industry</h2>
+  <div class="stats">
+    <div class="stat"><div class="v">$12–37 bn</div><div class="k">Market size range; estimates disagree, quote a range</div></div>
+    <div class="stat"><div class="v">10–20%</div><div class="k">Share held by organised players</div></div>
+    <div class="stat"><div class="v">~69,000</div><div class="k">New homes expected to complete in Bengaluru in 2026 (ANAROCK)</div></div>
+    <div class="stat"><div class="v">₹6–26 L</div><div class="k">Full 2BHK interiors in Bengaluru, wide spread</div></div>
+  </div>
+  <h3>The big players</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Company</th><th>Latest</th></tr></thead>
+    <tbody>
+      <tr><td>Livspace</td><td>FY25 revenue ₹1,460 cr (+23%), still loss-making; cut ~1,000 jobs in an “AI-native” restructuring; co-founder left Feb 2026</td></tr>
+      <tr><td>HomeLane</td><td>Bought DesignCafe (2024); FY25 revenue ₹748 cr, net loss ₹111 cr; says AI cut first design from 3–4 hours to ~5 minutes; IPO talk</td></tr>
+      <tr><td>Bonito Designs</td><td>FY25 revenue fell to ₹116 cr, loss ₹53.5 cr</td></tr>
+      <tr><td>Asian Paints Beautiful Homes</td><td>74 stores; paint brand moving into full interiors</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Pain points</h3>
+  <div class="grid g3">
+    <div class="card"><h4>The advance trap</h4><p>Low quote → advance paid → price rises (e.g. ₹8–10L becomes ₹18L) → delays → no refund. Consumer courts have ordered refunds.</p></div>
+    <div class="card"><h4>Quotes can't be compared</h4><p>Different materials and units. firstbriq's own article: quotes from ₹8L to ₹30L for the same 2BHK.</p></div>
+    <div class="card"><h4>Trust and quality</h4><p>Portfolios can't be verified; material swaps; counterfeit plywood reported by brands.</p></div>
+    <div class="card"><h4>Coordination chaos</h4><p>Many vendors and trades, all on WhatsApp, nothing recorded. Your round-1 problem.</p></div>
+    <div class="card"><h4>Labour</h4><p>Shortage of trained workers (~2 million estimated); dependence on a few carpenters.</p></div>
+    <div class="card"><h4>Payments and GST</h4><p>Large advances, unclear milestones, cash and handwritten bills.</p></div>
+  </div>
+  <h3>Where AI fits</h3>
+  <p>The leaders use AI to <b>cut their own costs</b> (faster design, call agents). The <b>homeowner's trust gap</b> is still open:</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Opportunity</th><th>Fits firstbriq because</th></tr></thead>
+    <tbody>
+      <tr><td>Turn different quotes into one comparable list</td><td>Studio already has quote comparison</td></tr>
+      <tr><td>Fair price band from the floor plan</td><td>“Estimate costs” is their LinkedIn promise</td></tr>
+      <tr><td>Lead qualification on WhatsApp in local languages</td><td>“Better-qualified clients”</td></tr>
+      <tr><td>WhatsApp project records: plan vs actual</td><td>Your round-1 bot</td></tr>
+      <tr><td>Milestone photos tied to payments held by a bank</td><td>Fixes the advance trap</td></tr>
+      <tr><td>Designer scores from real project records</td><td>Makes “verified” provable</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- PRACTICE -->
+<section id="practice" role="tabpanel" hidden>
+  <h2>Practice questions</h2>
+  <p>Answer out loud first, then click the card to see a model answer.</p>
+  <div class="toolbar">
+    <button class="btn primary" id="shuffle">Shuffle</button>
+    <button class="btn" id="showAll">Show all answers</button>
+    <button class="btn" id="hideAll">Hide all</button>
+  </div>
+  <div class="fc" id="cards"></div>
+</section>
+
+<!-- DAY -->
+<section id="day" role="tabpanel" hidden>
+  <h2>On the day</h2>
+  <div class="grid g2">
+    <div>
+      <h3 style="margin-top:0">45-minute plan</h3>
+      <div class="toolbar">
+        <button class="btn primary" id="tStart">Start practice timer</button>
+        <button class="btn" id="tReset">Reset</button>
+        <span class="clock" id="tClock" style="font-size:26px;align-self:center">00:00</span>
+      </div>
+      <div class="timeline" id="plan"></div>
+    </div>
+    <div>
+      <h3 style="margin-top:0">Checklist</h3>
+      <div class="progress"><i id="prog"></i></div>
+      <div class="check" id="checks"></div>
+      <h3>Before you say yes to an offer</h3>
+      <div class="card"><p>Ask for an offer letter that states the role, pay, duration, and exactly when and how the conversion to full-time happens. Check the legal company name on the MCA site. Never pay any fee.</p></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="wrap"><footer>Prepared for Zealous, 21 Oct 2026. Company figures come from public sources and the companies' own claims; check anything you plan to quote. Detailed sources are in the research report in the same folder.</footer></div>
+
+<script>
+(function(){
+  const $ = (s, r=document) => r.querySelector(s);
+  const el = (tag, attrs={}, html='') => { const e=document.createElement(tag); for(const k in attrs){ e.setAttribute(k, attrs[k]); } if(html) e.innerHTML=html; return e; };
+  const store = {
+    get(k, d){ try{ const v=localStorage.getItem(k); return v===null?d:JSON.parse(v);}catch(e){return d;} },
+    set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  };
+
+  /* tabs */
+  const tabs=[...document.querySelectorAll('nav.tabs button')];
+  function showTab(id){
+    tabs.forEach(b=>b.setAttribute('aria-selected', String(b.dataset.tab===id)));
+    document.querySelectorAll('main section').forEach(s=>s.hidden = s.id!==id);
+    store.set('fb_tab', id);
+  }
+  tabs.forEach(b=>b.addEventListener('click',()=>{ showTab(b.dataset.tab); window.scrollTo({top:0}); }));
+  const hash=(location.hash||'').slice(1);
+  showTab(tabs.some(b=>b.dataset.tab===hash)?hash:store.get('fb_tab','story'));
+
+  /* pipeline */
+  const PIPE=[
+    ['Ingest','<ul><li>WhatsApp sends a <b>webhook</b> to your server for every message.</li><li>Put it in a <b>queue</b> and store the raw message and media first, so nothing is ever lost.</li></ul>'],
+    ['Normalise','<ul><li><b>Voice</b> → text with Sarvam speech-to-text in <code>codemix</code> mode (Hinglish). Keep original and English.</li><li><b>Image</b> → is it a bill, a site photo, a design or a screenshot?</li><li><b>Bill</b> → vision model reads the line items.</li><li><b>Text</b> → detect language; add an English version.</li></ul>'],
+    ['Understand','<ul><li>Classify intent: purchase, payment, payment request, labour, progress, change request, approval, question, chit-chat.</li><li>Fill a fixed JSON schema using the model\'s structured-output mode.</li><li>Give the model a glossary: bori = bag, rft, sqft, ply grades, brand names.</li></ul>'],
+    ['Resolve','<ul><li>“Raju bhaiya”, “plywood wala” → which vendor in the ERP?</li><li>“same as yesterday”, “2 more” → link to the earlier message.</li><li>Which project? Use the group, or ask.</li></ul>'],
+    ['Decide','<ul><li>Checks + rules → <b>auto-post</b>, <b>PM review</b>, <b>ask sender</b>, or <b>ignore</b>.</li><li>See the decision table below.</li></ul>'],
+    ['Write','<ul><li>Call the ERP API. Use <code>message_id</code> as an idempotency key so one message makes at most one record.</li><li>Money entries start as <b>drafts</b>.</li><li>Every record links back to the original message (audit trail).</li></ul>'],
+    ['Close the loop','<ul><li>Short reply: “Noted ✔ 20 ply sheets, ₹54,000, Raju”.</li><li>Daily digest to the PM: pending bills, unclear items.</li><li>Weekly budget vs actual per project.</li></ul>']
+  ];
+  const pipe=$('#pipe'), pd=$('#pipeDetail');
+  PIPE.forEach((p,i)=>{ const b=el('button',{type:'button','aria-pressed':'false'},`<span class="n">${i+1}</span>${p[0]}`); b.onclick=()=>selPipe(i); pipe.appendChild(b); });
+  function selPipe(i){ [...pipe.children].forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j))); pd.innerHTML=`<div class="label">Step ${i+1}</div><h4 style="font-family:var(--f-display);margin:2px 0 6px;font-size:19px">${PIPE[i][0]}</h4>${PIPE[i][1]}`; }
+  selPipe(0);
+
+  /* demo messages */
+  const MSGS=[
+    {who:'Raju (ply supplier)',kind:'text',text:'Bhai 20 sheet 18mm BWP bhej diya HSR site pe, 2700 rate, total 54000. Bill shaam ko bhejta hu',
+     json:{project:'HSR 3BHK',event:'material_purchase',vendor:{raw:'Raju',match:'V-221 Raju Traders',conf:0.93},items:[{name:'BWP plywood 18mm',qty:20,unit:'sheet',rate:2700,amount:54000}],total:54000,evidence:'text only, bill promised',status:'claimed'},
+     v:['ask','Record as claimed','Numbers add up (20 × 2700 = 54,000) and the vendor is known, but there is no bill yet. Save it as “claimed” and wait for the bill.'],
+     reply:'Noted: 20 sheets 18mm BWP, ₹54,000, Raju. Bill aane par confirm karenge 👍'},
+    {who:'Raju (ply supplier)',kind:'photo',text:'📷 [photo of handwritten bill: 20 × BWP 18mm @2700 = 54,000]',
+     json:{project:'HSR 3BHK',event:'material_purchase',vendor:{raw:'Raju Traders',match:'V-221',conf:0.97},items:[{name:'BWP plywood 18mm',qty:20,unit:'sheet',rate:2700,amount:54000}],total:54000,checks:{items_add_up:true,matches_claim:true,rate_in_usual_range:true},status:'draft → auto-post'},
+     v:['auto','Auto-post','Bill matches the earlier claim, items add up, rate is in the usual range. Post it and link both messages.'],
+     reply:'Bill received ✔ ₹54,000 entered for HSR 3BHK.'},
+    {who:'Suresh (carpenter)',kind:'voice',text:'🎤 0:23 “Sir kitchen ka carcass ho gaya, kal se shutter lagayenge, 15 hazaar advance chahiye”',
+     json:{project:'HSR 3BHK',events:[{event:'progress',room:'kitchen',stage:'carcass done'},{event:'payment_request',amount:15000,to:'Suresh',reason:'advance for shutters'}],transcript_lang:'hi-en (codemix)',status:'needs PM'},
+     v:['pm','PM review','Two things in one voice note. Progress can be logged. A payment request is never auto-approved: send it to the PM with a summary.'],
+     reply:'(to PM) Suresh: kitchen carcass done; asks ₹15,000 advance for shutters. Approve / Reject'},
+    {who:'Electrician',kind:'text',text:'wire ka 8500 hua, bill bhej raha hu',
+     json:{project:null,event:'material_purchase',vendor:{raw:'Electrician',match:null,conf:0.41},items:[{name:'wire',qty:null,amount:8500}],status:'unclear'},
+     v:['ask','Ask sender','Project and vendor are unclear (this person works on several sites). Ask one short question in their language.'],
+     reply:'Ye kaunse site ka hai? 1) HSR 2) Whitefield'},
+    {who:'Raju (ply supplier)',kind:'photo',text:'📷 [same bill photo sent again]',
+     json:{event:'material_purchase',duplicate_of:'msg #2',image_hash_match:true,status:'duplicate'},
+     v:['dup','Duplicate','Same image as an earlier bill. Never count it twice.'],
+     reply:'(no reply, or) Ye bill pehle hi note ho chuka hai ✔'},
+    {who:'PM',kind:'text',text:'👍 ok',
+     json:{event:'chit_chat',status:'ignore'},
+     v:['ignore','Ignore','Nothing to record. Kept only as context.'],
+     reply:'(no reply)'}
+  ];
+  const msgs=$('#msgs');
+  MSGS.forEach((m,i)=>{ const b=el('button',{type:'button',class:'msg','aria-pressed':'false'},`<span class="who">${m.who}</span><span class="kind">${m.kind}</span><br>${m.text}`); b.onclick=()=>selMsg(i); msgs.appendChild(b); });
+  function selMsg(i){
+    const m=MSGS[i];
+    [...msgs.children].forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j)));
+    $('#json').textContent=JSON.stringify(m.json,null,2);
+    $('#verdict').innerHTML=`<div class="verdict v-${m.v[0]}"><span class="pill">${m.v[1]}</span><span>${m.v[2]}</span></div>`;
+    $('#reply').innerHTML=`<span class="label">Bot reply</span><br>${m.reply}`;
+  }
+  selMsg(0);
+
+  /* glossary */
+  const GL=[
+    ['API','A door that lets one program send or read data in another. The bot writes purchases to the ERP through it.'],
+    ['Webhook','The other system calls you when something happens. WhatsApp calls your bot for every new message.'],
+    ['Authentication','Proof the bot is allowed in (API key or OAuth). Each firm connects its own account; keys are stored safely.'],
+    ['Schema','The fixed shape of a record. The AI must fill exactly these fields: vendor, qty, rate, total, project.'],
+    ['Validation','Checks before saving: total = qty × rate? vendor exists? project open?'],
+    ['Idempotency','Sending the same thing twice creates only one record. Re-sent webhooks and re-forwarded bills must not double the cost.'],
+    ['Master data','The ERP\'s fixed lists: vendors, projects, items. The bot matches “Raju bhaiya” to vendor V-221.'],
+    ['Draft vs posted','A draft waits for approval; posted is final. The bot makes drafts; the PM approves.'],
+    ['Audit trail','Who changed what, and when. Every record links to the original WhatsApp message.'],
+    ['Connector','An adapter per system: Zoho through its API, Tally through XML import, Excel/CSV as a fallback.'],
+    ['Queue & rate limits','Systems allow only so many requests a minute. A queue absorbs bursts so nothing is lost.']
+  ];
+  const g=$('#glossary');
+  GL.forEach(x=>{ const d=el('details',{class:'ob'}); d.innerHTML=`<summary><b>${x[0]}</b></summary><div class="body"><p style="margin:0">${x[1]}</p></div>`; g.appendChild(d); });
+
+  /* funnel */
+  const FUN=[
+    ['Capture','One inbox for website form, WhatsApp, Instagram, Google. Remove duplicates of the same person across channels. Get consent at the form.'],
+    ['Qualify','A WhatsApp chat in the homeowner\'s language confirms what the planner already holds and fills gaps: pincode, BHK, scope (full home / kitchen / wardrobes), budget band, possession date, style, who decides. Voice notes understood too.'],
+    ['Score','How likely and how valuable: finished a plan? budget realistic for the scope? possession soon? phone verified? replied fast?'],
+    ['Match & route','Send to 2–3 best-fit firms by area, budget, style, capacity and response rate. Rotate fairly so new firms also get leads. Never blast one lead to ten firms.'],
+    ['Follow up','Nudges at the right time (“possession in 2 months”), book consultation or site-visit slots, send relevant portfolio projects. If a firm doesn\'t call back within the agreed time, reassign.'],
+    ['Hand over','Give the firm a one-page brief of the whole chat before the first call: “3BHK, ₹8–10L, kitchen + wardrobes, possession March, likes Japandi”.'],
+    ['Learn','Record won / lost and why. Feed it back into scoring and matching. Refund or credit firms for bad leads.']
+  ];
+  const fun=$('#funnel'), fd=$('#funnelDetail');
+  FUN.forEach((p,i)=>{ const b=el('button',{type:'button','aria-pressed':'false'},`<span class="n">${i+1}</span>${p[0]}`); b.onclick=()=>selFun(i); fun.appendChild(b); });
+  function selFun(i){ [...fun.children].forEach((b,j)=>b.setAttribute('aria-pressed',String(i===j))); fd.innerHTML=`<div class="label">Stage ${i+1}</div><h4 style="font-family:var(--f-display);margin:2px 0 6px;font-size:19px">${FUN[i][0]}</h4><p style="margin:0">${FUN[i][1]}</p>`; }
+  selFun(1);
+
+  /* lead score */
+  const SC=[
+    ['plan','Finished a plan on firstbriq',20],
+    ['otp','Phone verified (OTP)',10],
+    ['budget','Budget realistic for scope',25],
+    ['poss','Possession within 3 months',20],
+    ['pin','Pincode inside service area',15],
+    ['reply','Replied to WhatsApp within a day',10]
+  ];
+  const sf=$('#scoreForm');
+  sf.innerHTML='<div class="label">Example lead: 3BHK, Whitefield</div>';
+  const chk=el('div',{class:'check',style:'margin-top:8px'});
+  const saved=store.get('fb_score',{plan:true,otp:true,budget:false,poss:true,pin:true,reply:false});
+  SC.forEach(s=>{ const l=el('label',{for:'sc_'+s[0]}); l.innerHTML=`<input type="checkbox" id="sc_${s[0]}" ${saved[s[0]]?'checked':''}><span>${s[1]} <span class="small">(+${s[2]})</span></span>`; chk.appendChild(l); });
+  sf.appendChild(chk);
+  function score(){
+    let t=0; const why=[]; const st={};
+    SC.forEach(s=>{ const on=$('#sc_'+s[0]).checked; st[s[0]]=on; if(on){t+=s[2];} else why.push(s[1].toLowerCase()); });
+    store.set('fb_score',st);
+    $('#scoreVal').textContent=t;
+    let band, cls;
+    if(t>=75){band='Hot: route to 2–3 firms now';cls='v-auto';}
+    else if(t>=45){band='Warm: AI keeps qualifying on WhatsApp';cls='v-pm';}
+    else {band='Cold: nurture with guides, check again later';cls='v-ignore';}
+    $('#scoreBand').innerHTML=`<div class="verdict ${cls}"><span class="pill">${t>=75?'Hot':t>=45?'Warm':'Cold'}</span><span>${band}</span></div>`;
+    $('#scoreWhy').textContent = why.length ? 'Missing: '+why.join(', ')+'.' : 'Everything checks out.';
+  }
+  chk.addEventListener('change',score); score();
+
+  /* observations from the live site */
+  const OBS=[
+    {k:'like',t:'Liked: content with real homeowner pain',n:'Articles like “Why You Got Quotes from ₹8L to ₹30L for the Same 2BHK” and the free report built from 5,476 unhappy homeowner reviews in Bangalore, sent on WhatsApp.',w:'Shows they understand the real pain. Good way to open: praise first.',s:'Turn that review data into a product: the estimator and designer scores.',m:'Report downloads → planner starts.'},
+    {k:'like',t:'Liked: structured designer profiles',n:'Each designer shows experience, projects, warranty (10–12 years) and timeline (45–60 days).',w:'Makes firms comparable, which is the whole promise.',s:'Add price range from real projects and an “on-time %” once project data exists.',m:'Profile → consultation request rate.'},
+    {k:'top',t:'The “planning platform” is hard to find',n:'LinkedIn says homeowners “estimate costs, plan rooms, compare materials”. On the home page I found no cost estimator or planner; it leads with articles and “find designers”. The Studio is behind sign-in.',w:'The planning tool is the front door to qualified leads. If visitors don\'t find it, firstbriq looks like another directory.',s:'Main button: “Estimate your home\'s interior cost in 2 minutes”. No sign-in until the result is shown.',m:'% of visitors who finish an estimate; % of those who become leads.'},
+    {k:'top',t:'Studio starts empty and doesn\'t ask anything',n:'A new user lands on a dashboard of ₹0 budget and 0% progress. It already says “My Home Sanctuary, 3BHK Renovation, Bangalore” without asking.',w:'An empty dashboard gives no reason to come back. And the details it skips (BHK, budget, possession date, rooms) are exactly the lead data firms want.',s:'A 5-question onboarding: BHK, pincode, possession date, budget band, rooms. Then show a starting budget split by room.',m:'Onboarding completion; week-1 return rate.'},
+    {k:'mid',t:'Studio words are technical, and say “decor”',n:'Labels like “Agentic AI Copilot”, “ReAct loop”, “Agentic Control”, “v2.4 Scalable Workspace”, “Decor Studio”.',w:'Homeowners don\'t know these terms. “Decor” sounds like cushions and lamps, not full interiors worth lakhs.',s:'Plain labels: “Ask firstbriq”, “My home plan”. Use “interiors” not “decor”.',m:'Copilot usage; user interviews.'},
+    {k:'mid',t:'Quote comparison is the most valuable Studio idea',n:'Studio has “Vendor Quotes” and a quotation comparison view, next to moodboards, stickies and a 2×2 matrix.',w:'Non-comparable quotes are a top homeowner pain (₹8L vs ₹30L). Moodboards are nice but common.',s:'Upload 3 quotes; AI lines them up item by item (ply grade, hardware brand, laminate thickness) and flags gaps.',m:'Quotes uploaded per user; leads that follow.'},
+    {k:'fix',t:'Small bugs worth mentioning politely',n:'The copilot greeting shows raw markdown: “connected to **My Home Sanctuary**”. At about 930px width the Studio heading breaks one word per line and the “Add Decor Item” button is cut off. On the designers list one firm shows “0.0 ()” as its rating.',w:'Small polish issues lower trust on a trust product.',s:'Render markdown in the chat; fix the hero layout at tablet widths; show “New on firstbriq” instead of 0.0.',m:'Not needed; just fix.'},
+    {k:'mid',t:'Only three designers listed',n:'The designers page showed three firms, after a few seconds of loading placeholders.',w:'A marketplace with few choices feels empty; slow loading adds to it.',s:'Be open about it: “Bengaluru, founding designers”, with a waitlist for homeowners in other areas. Speed up the first load.',m:'Bounce rate on /designers.'},
+    {k:'mid',t:'WhatsApp link previews',n:'The page code that WhatsApp and Google first receive has only the title “FirstBriq”, no description or preview image. Check by pasting a link into WhatsApp.',w:'In India links are shared on WhatsApp; a bare preview gets fewer clicks.',s:'Pre-render pages and add a description and image per designer and article.',m:'Click-through from shared links.'}
+  ];
+  const SEV={top:['sev-top','Top point'],mid:['sev-mid','Idea'],fix:['sev-fix','Polish'],like:['sev-like','Liked']};
+  const of=$('#obsFilter'), ol=$('#obsList');
+  const OF=[['all','All'],['like','Liked'],['top','Top points'],['mid','Ideas'],['fix','Polish']];
+  let curOF='all';
+  OF.forEach(f=>{ const b=el('button',{type:'button','aria-pressed':String(f[0]==='all')},f[1]); b.onclick=()=>{curOF=f[0];[...of.children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));drawObs();}; of.appendChild(b); });
+  function drawObs(){
+    ol.innerHTML='';
+    OBS.filter(o=>curOF==='all'||o.k===curOF).forEach((o,i)=>{
+      const d=el('details',{class:'ob'}); if(o.k==='top') d.open=true;
+      d.innerHTML=`<summary><span class="sev ${SEV[o.k][0]}">${SEV[o.k][1]}</span><b>${o.t}</b></summary><div class="body"><dl class="oshape"><dt>Noticed</dt><dd>${o.n}</dd><dt>Why it matters</dt><dd>${o.w}</dd><dt>Suggestion</dt><dd>${o.s}</dd><dt>Measure</dt><dd>${o.m}</dd></dl></div>`;
+      ol.appendChild(d);
+    });
+  }
+  drawObs();
+
+  /* companies */
+  const COS=[
+    {g:'global',n:'Houzz + Houzz Pro',c:'US',d:'Inspiration site and pro directory, plus paid software for pros: estimates, invoices, AI that logs expenses from receipt photos.',l:'Earn from both sides: leads and software for firms. Your WhatsApp bot could be that software.'},
+    {g:'global',n:'Checkatrade',c:'UK',d:'Vetted trades directory: up to 12 checks per trade, reviews, a guarantee up to £1,000.',l:'Publish what “verified” checks, and re-check every year.'},
+    {g:'global',n:'Sweeten',c:'US',d:'Free matching with vetted contractors (accepts under 20% of applicants); stays involved; contractors pay a 1.75–3.75% success fee.',l:'Charge on success, not per lead. Stay involved after the match.'},
+    {g:'global',n:'Angi / HomeAdvisor',c:'US',d:'Lead marketplace. FTC order of up to $7.2M (2023) over lead quality; in 2025 switched to letting homeowners choose.',l:'Warning: selling bad leads destroys trust. Lead quality is the product.'},
+    {g:'global',n:'Block Renovation',c:'US',d:'Vetted contractors, standard scope and comparable bids, milestone payments with oversight.',l:'Standard quote templates make comparison fair.'},
+    {g:'global',n:'Tubatu',c:'China',d:'Homeowner money held by a bank and released stage by stage after inspection.',l:'Hold payments with a regulated partner, release by milestone. Fixes the advance trap.'},
+    {g:'global',n:'Manycore (Kujiale / Coohom)',c:'China',d:'Design software tied to product catalogues. Listed in Hong Kong 2026; 2025 revenue RMB 820m, mostly subscriptions, profitable on adjusted basis.',l:'Planning tools tied to real materials and prices can be a business on their own.'},
+    {g:'global',n:'Modsy, Homepolish',c:'US',d:'Managed online design services. Shut down in 2022 and 2019.',l:'Don\'t become a managed design firm; stay a platform.'},
+    {g:'wa',n:'Pillar',c:'Italy',d:'WhatsApp delivery notes and invoices → site accounting and margins. €12M seed (May 2026).',l:'Closest to your bot: money records from WhatsApp.'},
+    {g:'wa',n:'Velora',c:'India',d:'Reads existing WhatsApp groups via linked device (QR); progress, deliveries, billing evidence for big contractors.',l:'Proof it works in India, and shows the ban-risk trade-off.'},
+    {g:'wa',n:'Sifu · Banamind · Valoon',c:'HK · UAE · Germany',d:'Read construction site groups; daily reports, safety flags, invoices.',l:'Mostly progress reports, not costs. Money needs stricter checks.'},
+    {g:'wa',n:'Zoffer Bills',c:'India',d:'Forward a bill on WhatsApp; AI reads it; you approve; entry goes to Zoho Books. ₹999/month.',l:'Same human-approval idea as your design.'},
+    {g:'india',n:'Powerplay · Onsite · RDash',c:'India',d:'Construction and interior project apps: materials, expenses, labour, quotes. Try to replace WhatsApp.',l:'Their weak spot: the vendor who never opens the app. Reading WhatsApp avoids that.'},
+    {g:'india',n:'Livspace · HomeLane',c:'India',d:'Full-stack: own designers, factories, warranties. Still loss-making.',l:'They build trust by owning everything. firstbriq builds trust by verifying independent designers.'},
+    {g:'india',n:'My Interior Designers',c:'Bengaluru',d:'Designer discovery platform launched May 2026, same “trusted designers” message.',l:'Direct rival. firstbriq\'s planning data and verification must be the difference.'},
+    {g:'india',n:'Verified.RealEstate Interiors',c:'Chennai',d:'Itemised per-room quotes, QR-logged materials, milestone photos, delay penalty.',l:'Homeowners value guarantees and comparable quotes.'}
+  ];
+  const cf=$('#coFilter'), cl=$('#coList');
+  const CF=[['all','All'],['global','Global platforms'],['wa','WhatsApp tools'],['india','India']];
+  let curCF='all';
+  CF.forEach(f=>{ const b=el('button',{type:'button','aria-pressed':String(f[0]==='all')},f[1]); b.onclick=()=>{curCF=f[0];[...cf.children].forEach(x=>x.setAttribute('aria-pressed',String(x===b)));drawCos();}; cf.appendChild(b); });
+  function drawCos(){
+    cl.innerHTML='';
+    COS.filter(c=>curCF==='all'||c.g===curCF).forEach(c=>{
+      const d=el('div',{class:'card co'});
+      d.innerHTML=`<div class="tag">${c.c}</div><h4>${c.n}</h4><p>${c.d}</p><div class="lesson"><b>Lesson:</b> ${c.l}</div>`;
+      cl.appendChild(d);
+    });
+  }
+  drawCos();
+
+  /* flashcards */
+  const QA=[
+    ['How would you handle a Kannada-English voice note?','Speech-to-text in code-mix mode; keep the original and an English version; extract against the schema with a trade glossary. If the amount came only from voice, record it as “claimed” and ask for the bill.'],
+    ['What if the bot puts a wrong amount in the ERP?','Money entries start as drafts. Every record links to its message. The PM fixes it in one tap; the fix is logged and becomes a test case. Big amounts always need approval.'],
+    ['How do you know it works?','Label 200–300 real messages from a few projects. Measure accuracy per field and per event type, split by project. Run in shadow mode first; turn on auto-post one category at a time when it passes a target.'],
+    ['Why not just build an app?','Contractors and suppliers won\'t install it. WhatsApp is where work already happens. The app is for the PM and homeowner, not the carpenter.'],
+    ['Which model would you use?','A cheap model to classify every message; a stronger vision model only for bills and hard cases; Sarvam for Indian speech. Keep it swappable and compare on our own labelled set.'],
+    ['How does the bot get into WhatsApp groups?','The official API only allows small groups the business creates (max 8). So: forward-to-bot number + chat export, plus a small official core group. Linked-device listeners read big groups but break WhatsApp\'s terms.'],
+    ['What is an ERP, and how does the bot update it?','A central system for projects, purchases, stock, vendors and accounts. The bot calls its API with a fixed record, uses the message id so nothing is counted twice, and creates drafts for the PM to approve.'],
+    ['Design an AI lead system for firstbriq.','Capture all channels → qualify on WhatsApp using the homeowner\'s plan data → score → route to 2–3 firms by area, budget, style, capacity → follow up and hand over a brief → learn from won/lost. Never blast leads; refund bad ones.'],
+    ['How would you price leads to firms?','Avoid pure pay-per-lead (Angi\'s lesson). Prefer a success fee or subscription with lead-quality guarantees, plus software as a second line.'],
+    ['What would you build in 4 weeks?','Week 1: bot number + chat import, store everything. Week 2: bill photo → items + PM review screen. Week 3: voice notes, vendor matching, daily digest. Week 4: shadow-mode numbers on 3 live projects; pick the first category to auto-post.'],
+    ['One improvement to firstbriq.com?','Make the cost estimator the main button. The planning tool is the front door to qualified leads, and today it is hard to find.'],
+    ['Biggest problem in Indian interiors?','The advance trap: low quote, advance paid, then price rises and delays. Comparable quotes and milestone payments held by a third party address it.']
+  ];
+  let order=QA.map((_,i)=>i);
+  const cards=$('#cards');
+  function drawCards(){
+    cards.innerHTML='';
+    order.forEach(i=>{
+      const c=el('div',{class:'card',tabindex:'0',role:'button','aria-expanded':'false'});
+      c.innerHTML=`<div class="q">${QA[i][0]}</div><div class="a" hidden>${QA[i][1]}</div><div class="hint">Click to show answer</div>`;
+      const tog=()=>{ const a=c.querySelector('.a'); a.hidden=!a.hidden; c.setAttribute('aria-expanded',String(!a.hidden)); c.querySelector('.hint').textContent=a.hidden?'Click to show answer':'Click to hide'; };
+      c.addEventListener('click',tog);
+      c.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tog(); } });
+      cards.appendChild(c);
+    });
+  }
+  drawCards();
+  $('#shuffle').onclick=()=>{ for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];} drawCards(); };
+  $('#showAll').onclick=()=>cards.querySelectorAll('.card').forEach(c=>{c.querySelector('.a').hidden=false;c.querySelector('.hint').textContent='Click to hide';});
+  $('#hideAll').onclick=()=>cards.querySelectorAll('.card').forEach(c=>{c.querySelector('.a').hidden=true;c.querySelector('.hint').textContent='Click to show answer';});
+
+  /* timer plan */
+  const PLAN=[[0,2,'Intro: one line on your background (reading values from field photos; refuse rather than guess)'],[2,17,'WhatsApp bot: restate, ask questions, pipeline, decisions, testing'],[17,25,'Lead management: funnel, scoring, routing; same engine as the bot'],[25,35,'firstbriq: one thing you liked, two top points, two companies'],[35,40,'Industry: pain points → where AI helps'],[40,45,'Your questions for them']];
+  const plan=$('#plan');
+  PLAN.forEach(p=>{ const d=el('div',{class:'tl'}); d.innerHTML=`<span class="t">${String(p[0]).padStart(2,'0')}–${p[1]}m</span><span>${p[2]}</span>`; plan.appendChild(d); });
+  let t0=null, tick=null;
+  function upd(){
+    const s=t0?Math.floor((Date.now()-t0)/1000):0;
+    $('#tClock').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+    const m=s/60;
+    [...plan.children].forEach((d,i)=>d.classList.toggle('now', t0!==null && m>=PLAN[i][0] && m<PLAN[i][1]));
+  }
+  $('#tStart').onclick=()=>{ if(tick) return; t0=Date.now(); tick=setInterval(upd,1000); upd(); };
+  $('#tReset').onclick=()=>{ clearInterval(tick); tick=null; t0=null; upd(); };
+  upd();
+
+  /* checklist */
+  const CL=['Open firstbriq.com on your phone and click through it','Paste a firstbriq link into WhatsApp and look at the preview','Say the 30-second bot answer out loud','Practise drawing the pipeline (Excalidraw or paper)','Pick your top 3 firstbriq points (start with one you liked)','Pick 4 companies, one lesson each','Prepare 2 questions to ask them','Quiet room, charger, camera and mic tested, water'];
+  const done=store.get('fb_checks',{});
+  const checks=$('#checks');
+  CL.forEach((t,i)=>{ const l=el('label',{for:'ck'+i}); l.innerHTML=`<input type="checkbox" id="ck${i}" ${done[i]?'checked':''}><span>${t}</span>`; if(done[i]) l.classList.add('done'); checks.appendChild(l); });
+  function prog(){ const n=CL.filter((_,i)=>$('#ck'+i).checked).length; $('#prog').style.width=(n/CL.length*100)+'%'; }
+  checks.addEventListener('change',e=>{ const i=e.target.id.slice(2); done[i]=e.target.checked; e.target.closest('label').classList.toggle('done',e.target.checked); store.set('fb_checks',done); prog(); });
+  prog();
+})();
+</script>
+</body>
+</html>

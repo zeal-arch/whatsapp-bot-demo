@@ -6,6 +6,18 @@ sure, it asks the project manager or the sender instead of guessing.
 
 Open `index.html` in a browser. No install or build is needed.
 
+## What's in this repo
+
+| Path | What it is |
+|---|---|
+| `index.html` | The bot demo (light and dark theme) |
+| `img/` | Image used by the demo |
+| `prep/index.html` | Interview prep site: the story, the bot design, ERP basics, lead management, product notes, companies, industry, practice questions |
+| `notes/round2-prep.md` | Full prep notes |
+| `notes/similar-products.md` | Quick list of similar products |
+| `notes/market-research-report.md` | Detailed research report with sources |
+| `notes/research/` | The research notes behind the report |
+
 ## What you see
 
 - **Phone:** a day of messages in the group "HSR 3BHK – Site": Hinglish and Kannada-English texts
