@@ -4,15 +4,15 @@ A clickable demo of a bot that sits in a home-interior project's WhatsApp group.
 voice notes, bill photos and documents, and turns them into records in a project ERP. When it is not
 sure, it asks the project manager or the sender instead of guessing.
 
-Open `index.html` in a browser. No install or build is needed.
+Open `index.html` for the prep site, or `bot-demo.html` for the bot demo. No install or build is needed.
 
 ## What's in this repo
 
 | Path | What it is |
 |---|---|
-| `index.html` | The bot demo (light and dark theme) |
-| `img/` | Image used by the demo |
-| `prep/index.html` | Interview prep site: the story, the bot design, ERP basics, lead management, product notes, companies, industry, practice questions |
+| `index.html` | Interview prep site: the story, the bot design, ERP basics, lead management, product notes, companies, industry, practice questions |
+| `bot-demo.html` | The WhatsApp bot demo (light and dark theme) |
+| `img/` | Image used by the bot demo |
 | `notes/round2-prep.md` | Full prep notes |
 | `notes/similar-products.md` | Quick list of similar products |
 | `notes/market-research-report.md` | Detailed research report with sources |

@@ -1,0 +1,1156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Site Bot Live Demo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<script>try{var t=localStorage.getItem('botdemo_theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
+<style>
+/* Layout: a product demo. Left: a real-size phone (390×800) with a messaging app. Middle: the bot's
+   console. Right: the ERP the bot writes into. Light + Apple-style dark, brand blues #075491 / #091626. */
+:root{
+  color-scheme:light;
+  --bg:#f2f4f7; --panel:#ffffff; --panel-2:#f8fafc; --hover:#f1f5f9;
+  --ink:#0b1220; --muted:#64748b; --line:#e2e8f0;
+  --accent:#075491; --accent-ink:#ffffff; --accent-hover:#06467a; --accent-soft:#e7f0f8; --accent-line:#b9d3ea; --accent-text:#075491;
+  --navy:#091626; --navy-ink:#e2ecf7; --navy-line:#1f3550;
+  --code-bg:#091626; --code-ink:#dbe7f5;
+  --brass:#b45309; --brass-soft:#fef6e4; --brass-line:#f6dfb3;
+  --ok:#15803d; --warn:#b45309; --bad:#b91c1c;
+  --ok-soft:#e8f6ec; --warn-soft:#fdf2e1; --bad-soft:#fdecec;
+  --warn-bg:#fffdf7; --warn-bar:#f59e0b;
+  --bar-bg:#eef2f7; --bar-before:#94a3b8;
+  --flash:#fff3c4; --shadow:rgba(9,22,38,.08); --backdrop:rgba(9,22,38,.4);
+  --seg-on-bg:#091626; --seg-on-ink:#ffffff;
+  --bot-grad:#e7f0f8;
+  /* messaging app (light) */
+  --wa-head:#008069; --wa-head-ink:#ffffff; --wa-wall:#efeae2; --wa-dots:rgba(0,0,0,.035);
+  --wa-out:#d9fdd3; --wa-in:#ffffff; --wa-ink:#111b21; --wa-time:#667781; --wa-tick:#53bdeb; --wa-green:#00a884;
+  --wa-chip:#ffffff; --wa-chip-ink:#54656f; --wa-e2e:#ffeecd; --wa-e2e-ink:#54656f; --wa-inp:#ffffff; --wa-ph:#8696a0;
+  --wa-shadow:rgba(11,20,26,.13); --wa-doc:#f5f6f6; --wave:#b0bec5; --home:#111111;
+  --n-neha:#8a3fb3; --n-suresh:#b26a00; --n-raju:#1f7a4a; --n-imran:#c8372d; --n-manju:#0f7a8a; --n-deepak:#7a6420; --n-rao:#b3306b; --n-ravi:#4a6a1f; --n-vikram:#5b4fc4; --n-arjun:#075491;
+  --f-ui:"Inter", -apple-system, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --f-phone:-apple-system, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --f-hand:"Kalam", "Bradley Hand", "Segoe Print", cursive;
+  --f-mono:"JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#091626; --panel:#0e1d30; --panel-2:#122640; --hover:#16304d;
+    --ink:#f5f5f7; --muted:#98a2b3; --line:#1f3550;
+    --accent:#075491; --accent-ink:#ffffff; --accent-hover:#0a64ab; --accent-soft:rgba(7,84,145,.32); --accent-line:#0b6db8; --accent-text:#64b5f0;
+    --navy:#050d17; --navy-ink:#e2ecf7; --navy-line:#1f3550;
+    --code-bg:#050d17; --code-ink:#dbe7f5;
+    --brass:#ff9f0a; --brass-soft:rgba(255,159,10,.12); --brass-line:rgba(255,159,10,.35);
+    --ok:#30d158; --warn:#ff9f0a; --bad:#ff453a;
+    --ok-soft:rgba(48,209,88,.14); --warn-soft:rgba(255,159,10,.14); --bad-soft:rgba(255,69,58,.15);
+    --warn-bg:rgba(255,159,10,.06); --warn-bar:#ff9f0a;
+    --bar-bg:#16304d; --bar-before:#5b6b80;
+    --flash:rgba(100,181,240,.25); --shadow:rgba(0,0,0,.45); --backdrop:rgba(0,0,0,.6);
+    --seg-on-bg:#f5f5f7; --seg-on-ink:#091626;
+    --bot-grad:rgba(7,84,145,.35);
+    --wa-head:#1f2c34; --wa-head-ink:#e9edef; --wa-wall:#0b141a; --wa-dots:rgba(255,255,255,.03);
+    --wa-out:#005c4b; --wa-in:#202c33; --wa-ink:#e9edef; --wa-time:#8696a0; --wa-tick:#53bdeb; --wa-green:#00a884;
+    --wa-chip:#182229; --wa-chip-ink:#8696a0; --wa-e2e:#182229; --wa-e2e-ink:#ffd279; --wa-inp:#2a3942; --wa-ph:#8696a0;
+    --wa-shadow:rgba(0,0,0,.35); --wa-doc:#1b262d; --wave:#5f6f78; --home:#e9edef;
+    --n-neha:#d18ef5; --n-suresh:#ffb547; --n-raju:#53d18b; --n-imran:#ff7a6e; --n-manju:#4fd1e0; --n-deepak:#e3c86a; --n-rao:#ff79b0; --n-ravi:#a6d86a; --n-vikram:#a79bff; --n-arjun:#64b5f0;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#091626; --panel:#0e1d30; --panel-2:#122640; --hover:#16304d;
+  --ink:#f5f5f7; --muted:#98a2b3; --line:#1f3550;
+  --accent:#075491; --accent-ink:#ffffff; --accent-hover:#0a64ab; --accent-soft:rgba(7,84,145,.32); --accent-line:#0b6db8; --accent-text:#64b5f0;
+  --navy:#050d17; --navy-ink:#e2ecf7; --navy-line:#1f3550;
+  --code-bg:#050d17; --code-ink:#dbe7f5;
+  --brass:#ff9f0a; --brass-soft:rgba(255,159,10,.12); --brass-line:rgba(255,159,10,.35);
+  --ok:#30d158; --warn:#ff9f0a; --bad:#ff453a;
+  --ok-soft:rgba(48,209,88,.14); --warn-soft:rgba(255,159,10,.14); --bad-soft:rgba(255,69,58,.15);
+  --warn-bg:rgba(255,159,10,.06); --warn-bar:#ff9f0a;
+  --bar-bg:#16304d; --bar-before:#5b6b80;
+  --flash:rgba(100,181,240,.25); --shadow:rgba(0,0,0,.45); --backdrop:rgba(0,0,0,.6);
+  --seg-on-bg:#f5f5f7; --seg-on-ink:#091626;
+  --bot-grad:rgba(7,84,145,.35);
+  --wa-head:#1f2c34; --wa-head-ink:#e9edef; --wa-wall:#0b141a; --wa-dots:rgba(255,255,255,.03);
+  --wa-out:#005c4b; --wa-in:#202c33; --wa-ink:#e9edef; --wa-time:#8696a0; --wa-tick:#53bdeb; --wa-green:#00a884;
+  --wa-chip:#182229; --wa-chip-ink:#8696a0; --wa-e2e:#182229; --wa-e2e-ink:#ffd279; --wa-inp:#2a3942; --wa-ph:#8696a0;
+  --wa-shadow:rgba(0,0,0,.35); --wa-doc:#1b262d; --wave:#5f6f78; --home:#e9edef;
+  --n-neha:#d18ef5; --n-suresh:#ffb547; --n-raju:#53d18b; --n-imran:#ff7a6e; --n-manju:#4fd1e0; --n-deepak:#e3c86a; --n-rao:#ff79b0; --n-ravi:#a6d86a; --n-vikram:#a79bff; --n-arjun:#64b5f0;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-ui);font-size:14px;line-height:1.5;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font-family:inherit}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent-text);outline-offset:2px}
+
+/* top bar */
+.top{padding-block:14px 10px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between}
+.title a{font-size:13px;color:var(--accent-text);text-decoration:none;font-weight:500}
+.title a:hover{text-decoration:underline}
+h1{font-size:20px;font-weight:700;margin:2px 0 0;letter-spacing:-.01em}
+.sub{font-size:12.5px;color:var(--muted);margin:2px 0 0}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font-weight:600;font-size:13px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:6px 12px;cursor:pointer;box-shadow:0 1px 2px var(--shadow)}
+.btn:hover{background:var(--hover)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{background:var(--accent-hover)}
+.btn:disabled{opacity:.45;cursor:default}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:transparent;padding:6px 10px;font-weight:600;font-size:12.5px;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--seg-on-bg);color:var(--seg-on-ink)}
+.counters{display:flex;flex-wrap:wrap;gap:8px;padding-block:0 12px}
+.ctr{border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;color:var(--muted);background:var(--panel);font-variant-numeric:tabular-nums}
+.ctr b{color:var(--ink);font-size:14px;margin-left:4px}
+.ctr.c-auto b{color:var(--ok)} .ctr.c-pm b{color:var(--warn)} .ctr.c-ask b{color:var(--accent-text)} .ctr.c-dup b{color:var(--bad)}
+
+/* mobile tabs */
+.mtabs{display:none;gap:6px;padding-block:0 10px}
+.mtabs button{flex:1;border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:7px;font-weight:600;color:var(--muted);cursor:pointer}
+.mtabs button[aria-selected="true"]{border-color:var(--accent-line);color:var(--accent-text);background:var(--accent-soft)}
+
+/* columns */
+.panels{display:grid;grid-template-columns:414px minmax(0,1fr) minmax(0,1.15fr);gap:16px;padding-block:0 20px;align-items:start}
+.panel{min-width:0;display:flex;flex-direction:column}
+.phwrap{display:flex;justify-content:center}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 3px var(--shadow);display:flex;flex-direction:column;height:800px;overflow:hidden}
+.scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:12px}
+
+/* ---------- phone ---------- */
+.device{width:390px;height:800px;flex:0 0 auto;border-radius:54px;background:#1c1c1e;padding:11px;box-shadow:0 0 0 2px #3a3a3c inset,0 20px 40px var(--shadow);position:relative;transform-origin:top center}
+.device::before{content:"";position:absolute;right:-3px;top:170px;width:3px;height:72px;border-radius:0 3px 3px 0;background:#2c2c2e}
+.screen{position:relative;width:100%;height:100%;border-radius:44px;overflow:hidden;display:flex;flex-direction:column;background:var(--wa-wall);font-family:var(--f-phone);color:var(--wa-ink)}
+.island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:110px;height:31px;border-radius:20px;background:#000;z-index:3}
+.status{height:50px;flex:0 0 auto;background:var(--wa-head);color:var(--wa-head-ink);display:flex;align-items:flex-end;justify-content:space-between;padding:0 28px 6px 34px;font-size:15px;font-weight:600}
+.status .icons{display:flex;gap:6px;align-items:center}
+.status svg{display:block}
+.status svg *{fill:var(--wa-head-ink)}
+.status svg rect[fill="none"]{fill:none;stroke:var(--wa-head-ink)}
+.whead{flex:0 0 auto;background:var(--wa-head);color:var(--wa-head-ink);display:flex;align-items:center;gap:8px;padding:6px 10px 9px 6px}
+.whead svg path,.whead svg rect[fill="none"]{stroke:var(--wa-head-ink)}
+.whead .acts circle{fill:var(--wa-head-ink)}
+.whead .back{width:22px;height:22px;flex:0 0 auto}
+.gav{width:38px;height:38px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;overflow:hidden}
+.gav svg path,.gav svg rect{stroke:none}
+.whead .gt{min-width:0;flex:1}
+.whead .gn{font-size:16.5px;font-weight:600;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.whead .gs{font-size:12.5px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.whead .acts{display:flex;gap:16px;flex:0 0 auto;padding-right:4px}
+.chat{flex:1;overflow-y:auto;padding:8px 10px 10px;display:flex;flex-direction:column;gap:3px;
+  background-color:var(--wa-wall);background-image:radial-gradient(var(--wa-dots) 1px,transparent 1.5px);background-size:16px 16px;scrollbar-width:none}
+.chat::-webkit-scrollbar{display:none}
+.daychip{align-self:center;background:var(--wa-chip);color:var(--wa-chip-ink);font-size:12px;border-radius:7px;padding:4px 10px;margin:6px 0 4px;box-shadow:0 1px .5px var(--wa-shadow);text-transform:uppercase}
+.e2e{align-self:center;background:var(--wa-e2e);color:var(--wa-e2e-ink);font-size:11.5px;border-radius:7px;padding:5px 10px;margin:0 16px 6px;text-align:center;box-shadow:0 1px .5px var(--wa-shadow)}
+.bub{position:relative;max-width:82%;align-self:flex-start;background:var(--wa-in);border:0;border-radius:0 8px 8px 8px;padding:5px 8px 6px 9px;margin-top:5px;cursor:pointer;text-align:left;font:inherit;font-size:14.5px;line-height:1.35;color:var(--wa-ink);box-shadow:0 1px .5px var(--wa-shadow)}
+.bub::before{content:"";position:absolute;top:0;left:-7px;border-right:8px solid var(--wa-in);border-bottom:10px solid transparent}
+.bub.out{align-self:flex-end;background:var(--wa-out);border-radius:8px 0 8px 8px}
+.bub.out::before{left:auto;right:-7px;border-right:0;border-left:8px solid var(--wa-out)}
+.bub.cont{margin-top:1px;border-radius:8px}
+.bub.cont::before{display:none}
+.bub.sel{box-shadow:0 0 0 2px var(--wa-tick)}
+.bub .who{font-weight:600;font-size:13px;line-height:1.3;margin-bottom:1px;display:flex;gap:6px;align-items:baseline}
+.bub .who .role{font-weight:400;color:var(--wa-time);font-size:12px}
+.bub .meta{float:right;margin:6px 0 -4px 10px;font-size:11px;color:var(--wa-time);display:flex;gap:3px;align-items:center;white-space:nowrap}
+.bub .meta .tk{color:var(--wa-tick);font-size:12px;letter-spacing:-3px;margin-right:2px}
+.bub .txt{white-space:pre-wrap;word-wrap:break-word}
+.bub.media{padding:3px 3px 4px}
+.bub.media .who{padding:2px 6px 0}
+.bub.media .cap{padding:4px 6px 0}
+.bub.media .meta{margin-right:6px}
+.botlbl{font-size:10px;font-weight:700;color:#fff;background:var(--accent);border-radius:4px;padding:0 4px;letter-spacing:.03em}
+
+/* voice */
+.voice{display:flex;align-items:center;gap:10px;width:255px;padding:4px 2px 0}
+.voice .vav{position:relative;width:46px;height:46px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;color:#fff;font-weight:600;font-size:17px}
+.voice .vav .mic{position:absolute;right:-3px;bottom:-1px;width:18px;height:18px;border-radius:50%;background:var(--wa-in);display:grid;place-items:center}
+.voice .pb{width:22px;height:22px;flex:0 0 auto}
+.voice .pb path{fill:var(--wa-ph)}
+.voice .wv{display:flex;align-items:center;gap:2px;height:28px;flex:1}
+.voice .wv i{display:block;width:3px;border-radius:2px;background:var(--wave)}
+.voice .wv i.dot{width:11px;height:11px;border-radius:50%;background:var(--wa-green);margin-right:2px}
+.vdur{font-size:11px;color:var(--wa-time);margin:2px 0 0 58px}
+
+/* photo of a bill on a table (a photo, so it keeps its own colours in both themes) */
+.photo{position:relative;width:250px;height:300px;border-radius:6px;overflow:hidden;
+  background:
+   radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.18),transparent 60%),
+   repeating-linear-gradient(98deg,rgba(0,0,0,.06) 0 2px,transparent 2px 9px),
+   linear-gradient(135deg,#7a5536,#9c7048 45%,#6a4a2e)}
+.photo::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.35))}
+.paper{position:absolute;left:26px;top:16px;width:196px;min-height:262px;padding:10px 12px 12px 22px;
+  background:#fbf8ef repeating-linear-gradient(transparent 0 19px,#cfdcec 19px 20px);background-position:0 30px;
+  transform:rotate(-3.5deg);box-shadow:0 8px 16px rgba(0,0,0,.45);font-family:var(--f-hand);color:#1e3a8a;font-size:12.5px;line-height:20px}
+.paper::before{content:"";position:absolute;left:14px;top:0;bottom:0;width:1px;background:#e8a0a0}
+.paper .shop{font-weight:700;text-align:center;font-size:14px;color:#111;letter-spacing:.02em}
+.paper .addr{font-size:9.5px;text-align:center;color:#444;line-height:12px;margin-bottom:6px;font-family:var(--f-phone)}
+.paper .no{display:flex;justify-content:space-between;font-size:11px;color:#333}
+.paper .tot{font-weight:700;border-top:1px solid #1e3a8a;margin-top:6px}
+.paper .sign{position:absolute;right:14px;bottom:8px;font-size:15px;transform:rotate(-8deg);opacity:.85}
+.paper .stamp{position:absolute;left:30px;bottom:14px;width:62px;height:62px;border:2px solid rgba(185,28,28,.55);border-radius:50%;color:rgba(185,28,28,.6);font:700 8px/1.1 var(--f-phone);display:grid;place-items:center;text-align:center;transform:rotate(14deg)}
+.drawing,.sitephoto{display:block;width:250px;height:185px;border-radius:6px;overflow:hidden}
+img.sitephoto{height:208px;object-fit:cover}
+
+/* document */
+.docb{display:flex;align-items:center;gap:10px;background:var(--wa-doc);border-radius:6px;padding:10px 10px;width:255px}
+.docb .nm{font-size:13.5px;line-height:1.3;word-break:break-all}
+.docb .sz{font-size:11.5px;color:var(--wa-time)}
+
+/* input bar */
+.wbar{flex:0 0 auto;background:var(--wa-wall);display:flex;align-items:center;gap:6px;padding:6px 8px 26px}
+.wbar .inp{flex:1;background:var(--wa-inp);border-radius:22px;height:44px;display:flex;align-items:center;gap:10px;padding:0 12px;color:var(--wa-ph);font-size:16px;box-shadow:0 1px .5px var(--wa-shadow)}
+.wbar .inp span{flex:1}
+.wbar .inp svg *{stroke:var(--wa-ph)}
+.wbar .inp svg circle[r="1.2"]{fill:var(--wa-ph);stroke:none}
+.wbar .mic{width:46px;height:46px;border-radius:50%;background:var(--wa-green);display:grid;place-items:center;flex:0 0 auto}
+.home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:var(--home);z-index:3}
+
+/* ---------- bot console ---------- */
+.ch{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.ch h2{font-size:15px;margin:0;font-weight:700}
+.ch .hint{font-size:12px;color:var(--muted);margin-left:auto;text-align:right}
+.botcard{display:flex;align-items:center;gap:11px;padding:12px 14px;border:0;border-bottom:1px solid var(--line);background:linear-gradient(180deg,var(--bot-grad),var(--panel));width:100%;text-align:left;cursor:pointer;color:inherit}
+.botcard:hover{background:var(--accent-soft)}
+.bav{width:42px;height:42px;border-radius:50%;background:var(--accent);display:grid;place-items:center;flex:0 0 auto;position:relative}
+.bav::after{content:"";position:absolute;right:0;bottom:1px;width:11px;height:11px;border-radius:50%;background:#30d158;border:2px solid var(--panel)}
+.botcard .bn{font-weight:700;font-size:15px}
+.botcard .bs{font-size:12px;color:var(--muted)}
+.botcard .go{margin-left:auto;font-size:12.5px;font-weight:600;color:var(--accent-ink);background:var(--accent);border-radius:8px;padding:6px 11px;white-space:nowrap}
+.log{display:flex;flex-direction:column;gap:8px}
+.empty{border:1px dashed var(--line);border-radius:10px;padding:18px;color:var(--muted);text-align:center;font-size:13px;background:var(--panel-2)}
+.entry{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 11px;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.entry:hover{background:var(--hover)}
+.entry.sel{border-color:var(--accent-line);box-shadow:0 0 0 3px var(--accent-soft)}
+.entry .eh{display:flex;gap:8px;align-items:baseline;font-size:12px;color:var(--muted)}
+.entry .eh > span:first-child{font-family:var(--f-mono)}
+.entry .eh b{color:var(--ink);font-size:13px}
+.kind{font:600 10px var(--f-mono);text-transform:uppercase;letter-spacing:.04em;border:1px solid var(--line);border-radius:4px;padding:0 4px;color:var(--muted)}
+.steps{display:flex;flex-wrap:wrap;gap:4px;margin:7px 0}
+.st{font-size:11px;font-weight:600;border-radius:999px;padding:1px 8px;background:var(--panel-2);color:var(--muted);border:1px solid var(--line);opacity:.7;transition:background .2s,color .2s,opacity .2s}
+.st.on{background:var(--accent-soft);color:var(--accent-text);border-color:var(--accent-line);opacity:1}
+.st.on::before{content:"✓ "}
+.verd{display:flex;gap:8px;align-items:flex-start;font-size:13px}
+.pill{flex:0 0 auto;font:600 10.5px var(--f-ui);letter-spacing:.02em;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.v-auto{background:var(--ok-soft);color:var(--ok)} .v-pm{background:var(--warn-soft);color:var(--warn)} .v-ask{background:var(--accent-soft);color:var(--accent-text)} .v-dup{background:var(--bad-soft);color:var(--bad)} .v-ignore{background:var(--panel-2);color:var(--muted)}
+.priv{margin-top:7px;font-size:12.5px;background:var(--brass-soft);border:1px solid var(--brass-line);border-radius:8px;padding:6px 9px}
+.sys{background:var(--brass-soft);border-color:var(--brass-line);cursor:default}
+.sys:hover{background:var(--brass-soft)}
+.sys h4{margin:0 0 4px;font-size:13.5px}
+.sys ul{margin:4px 0 0;padding-left:18px}
+
+/* ---------- ERP ---------- */
+.erpbar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--navy-line);background:var(--navy);color:var(--navy-ink)}
+.erpbar .logo{width:26px;height:26px;border-radius:7px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px}
+.erpbar .an{font-weight:700;font-size:14px;color:#fff}
+.erpbar .proj{margin-left:auto;font-size:12px;border:1px solid var(--navy-line);border-radius:7px;padding:3px 9px;color:var(--navy-ink);white-space:nowrap}
+.erp{display:flex;flex-direction:column;gap:12px;background:var(--panel-2)}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.box h3{font-size:13.5px;margin:0 0 8px;display:flex;align-items:baseline;gap:8px;font-weight:700}
+.box h3 .cnt{font-size:11.5px;color:var(--muted);font-weight:500;background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:0 7px}
+.box h3 .api{margin-left:auto;font:500 10.5px var(--f-mono);color:var(--muted)}
+.budget .row{display:flex;justify-content:space-between;font-size:13px;font-variant-numeric:tabular-nums}
+.bar{height:10px;border-radius:6px;overflow:hidden;display:flex;margin:8px 0;background:var(--bar-bg)}
+.bar i{display:block;height:100%}
+.bar .before{background:var(--bar-before)} .bar .today{background:var(--ok)} .bar .pend{background:repeating-linear-gradient(45deg,var(--warn-soft) 0 5px,var(--warn-bar) 5px 7px)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11.5px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.legend .l1::before{background:var(--bar-before)} .legend .l2::before{background:var(--ok)} .legend .l3::before{background:var(--warn-bar)}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{text-align:left;vertical-align:top;padding:6px 6px;border-bottom:1px solid var(--line)}
+th{font-size:10.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--panel-2)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--hover)}
+tr.flash td{animation:flash 1.8s ease-out}
+@keyframes flash{0%{background:var(--flash)}100%{background:transparent}}
+.tag{font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:999px;white-space:nowrap}
+.t-posted,.t-approved{background:var(--ok-soft);color:var(--ok)}
+.t-claimed{background:var(--accent-soft);color:var(--accent-text)}
+.t-needs{background:var(--warn-soft);color:var(--warn)}
+.t-rejected{background:var(--bad-soft);color:var(--bad)}
+.was{display:block;font-size:11px;color:var(--muted)}
+.rv{border:1px solid var(--brass-line);border-left:3px solid var(--warn-bar);border-radius:8px;padding:8px 10px;margin-top:8px;background:var(--warn-bg)}
+.rv.done{border-color:var(--line);border-left-color:var(--line);background:var(--panel);opacity:.8}
+.rv.flash{animation:flash 1.8s ease-out}
+.rv .rt{font-weight:600;display:flex;justify-content:space-between;gap:8px;font-size:13px}
+.rv .rd{font-size:12.5px;color:var(--muted);margin:2px 0 7px}
+.rv .ra{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.rv .ra .btn{padding:3px 10px;font-size:12px}
+.rv .ra .btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.rv .ra .btn.no{color:var(--bad)}
+.none{font-size:12.5px;color:var(--muted)}
+
+/* ---------- drawer ---------- */
+.backdrop{position:fixed;inset:0;background:var(--backdrop);z-index:20}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(640px,100vw);background:var(--panel);border-left:1px solid var(--line);z-index:21;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .22s ease;box-shadow:-12px 0 30px var(--shadow)}
+.drawer.open{transform:none}
+.dh{display:flex;align-items:center;gap:10px;padding:14px max(16px,env(safe-area-inset-right,0px)) 12px 18px;border-bottom:1px solid var(--line);padding-top:max(14px,env(safe-area-inset-top,0px))}
+.dh h2{font-size:17px;margin:0;flex:1;line-height:1.2}
+.db{overflow-y:auto;padding:14px max(16px,env(safe-area-inset-right,0px)) 30px 18px;flex:1}
+.dtabs{display:flex;gap:4px;flex-wrap:wrap;padding:10px max(16px,env(safe-area-inset-right,0px)) 0 18px;border-bottom:1px solid var(--line)}
+.dtabs button{border:0;border-bottom:2px solid transparent;background:none;padding:6px 10px 8px;font-weight:600;font-size:13px;color:var(--muted);cursor:pointer}
+.dtabs button[aria-selected="true"]{border-bottom-color:var(--accent-text);color:var(--accent-text)}
+.sec{margin:0 0 18px}
+.sec > .lbl{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.db .bub{cursor:default;box-shadow:none;border:1px solid var(--line);max-width:100%}
+.db .bub::before{display:none}
+pre{background:var(--code-bg);color:var(--code-ink);border:1px solid var(--navy-line);border-radius:8px;padding:10px 12px;font:12px/1.55 var(--f-mono);overflow-x:auto;margin:4px 0;white-space:pre}
+.checks{list-style:none;margin:0;padding:0}
+.checks li{display:flex;gap:8px;padding:3px 0;font-size:13.5px}
+.checks .y{color:var(--ok);font-weight:700}.checks .x{color:var(--bad);font-weight:700}
+.call{border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin:7px 0;background:var(--panel)}
+.call .ch{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;padding:0;border:0}
+.meth{font:700 10.5px var(--f-mono);padding:1px 6px;border-radius:4px;color:#fff;background:var(--accent)}
+.meth.GET{background:#15803d} .meth.PATCH{background:#b45309} .meth.INT{background:#64748b}
+.call .url{font:12px var(--f-mono);word-break:break-all;color:var(--ink)}
+.call .nm{font-weight:600;font-size:13.5px;width:100%}
+.call .when{font-size:12.5px;color:var(--muted);margin:3px 0}
+.call code{font-family:var(--f-mono);font-size:11.5px;background:var(--panel-2);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+details.raw summary{cursor:pointer;font-size:12.5px;color:var(--accent-text);font-weight:600;margin-top:4px}
+.rtab td,.rtab th{font-size:12.5px}
+.rtab tbody tr{cursor:default}
+.rtab tbody tr:hover td{background:transparent}
+.rtab .c{font:700 14px var(--f-mono);text-align:center}
+.flowline{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px;margin:4px 0 10px}
+.flowline span{border:1px solid var(--line);border-radius:6px;padding:2px 8px;font-weight:600;background:var(--panel-2)}
+.flowline em{font-style:normal;color:var(--muted)}
+.quote{background:var(--accent-soft);border:1px solid var(--accent-line);padding:10px 14px;border-radius:8px;font-size:13px}
+
+@media (max-width:1280px){
+  .panels{grid-template-columns:414px minmax(0,1fr)}
+  #pErp{grid-column:1 / -1}
+  #pErp .card{height:auto;max-height:none}
+}
+@media (max-width:900px){
+  .mtabs{display:flex}
+  .panels{grid-template-columns:minmax(0,1fr)}
+  .panel{display:none}
+  .panel.show{display:flex}
+  .card{height:calc(100vh - 200px);min-height:480px}
+  #pErp .card{height:calc(100vh - 200px)}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="top">
+    <div class="title">
+      <a href="index.html">← Back to prep</a>
+      <h1>Site bot · live demo</h1>
+      <p class="sub">Scripted demo of the design: messages and bot outputs are prepared in advance, no real AI or WhatsApp account is connected. All names are fictional.</p>
+    </div>
+    <div class="controls">
+      <button class="btn primary" id="play" type="button">▶ Play</button>
+      <button class="btn" id="step" type="button">Step ▸</button>
+      <div class="seg" role="group" aria-label="Speed">
+        <button type="button" data-sp="1" aria-pressed="true">1×</button>
+        <button type="button" data-sp="2" aria-pressed="false">2×</button>
+        <button type="button" data-sp="4" aria-pressed="false">4×</button>
+      </div>
+      <button class="btn" id="reset" type="button">Reset</button>
+      <button class="btn" id="theme" type="button" title="Switch theme">◐ Auto</button>
+    </div>
+  </div>
+  <div class="counters" id="counters"></div>
+  <div class="mtabs" role="tablist" aria-label="Panels">
+    <button type="button" role="tab" data-p="pChat" aria-selected="true">Phone</button>
+    <button type="button" role="tab" data-p="pBot" aria-selected="false">Bot</button>
+    <button type="button" role="tab" data-p="pErp" aria-selected="false">ERP</button>
+  </div>
+
+  <div class="panels">
+    <section class="panel show" id="pChat" aria-label="Project manager's phone">
+      <div class="phwrap" id="phwrap">
+        <div class="device" id="device">
+          <div class="screen">
+            <div class="island" aria-hidden="true"></div>
+            <div class="status"><span id="sbTime">8:00</span>
+              <span class="icons" aria-hidden="true">
+                <svg width="18" height="11" viewBox="0 0 18 11"><rect x="0" y="7" width="3" height="4" rx="1" fill="#fff"/><rect x="5" y="5" width="3" height="6" rx="1" fill="#fff"/><rect x="10" y="2.5" width="3" height="8.5" rx="1" fill="#fff"/><rect x="15" y="0" width="3" height="11" rx="1" fill="#fff"/></svg>
+                <svg width="16" height="11" viewBox="0 0 16 11"><path d="M8 2.2c2.3 0 4.4.9 6 2.4l1.2-1.3C13.3 1.5 10.8.4 8 .4S2.7 1.5.8 3.3L2 4.6c1.6-1.5 3.7-2.4 6-2.4zm0 3.4c1.4 0 2.6.5 3.6 1.4l1.2-1.3C11.5 4.5 9.8 3.8 8 3.8s-3.5.7-4.8 1.9L4.4 7C5.4 6.1 6.6 5.6 8 5.6zm0 3.3c-.6 0-1.1.2-1.5.6L8 11l1.5-1.5c-.4-.4-.9-.6-1.5-.6z" fill="#fff"/></svg>
+                <svg width="27" height="12" viewBox="0 0 27 12"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="#fff" opacity=".5"/><rect x="2" y="2" width="16" height="8" rx="1.8" fill="#fff"/><rect x="24" y="4" width="2" height="4" rx="1" fill="#fff" opacity=".5"/></svg>
+              </span></div>
+            <div class="whead">
+              <svg class="back" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 4.5 8 12l7.5 7.5" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div class="gav" aria-hidden="true"><svg width="38" height="38" viewBox="0 0 38 38"><rect width="38" height="38" fill="#d6e6f5"/><path d="M9 20 19 11l10 9v9H9z" fill="#075491"/><rect x="16" y="22" width="6" height="7" fill="#d6e6f5"/></svg></div>
+              <div class="gt"><div class="gn">HSR 3BHK – Site</div><div class="gs" id="gsub">Arjun, Neha, Suresh, Raju, Imran, Manju, Deepak, Mrs. Rao, Ravi, Vikram, firstbriq bot</div></div>
+              <div class="acts" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24"><rect x="2" y="6" width="13" height="12" rx="2.5" fill="none" stroke="#fff" stroke-width="2"/><path d="m15 10.5 6-3.5v10l-6-3.5z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>
+                <svg width="20" height="22" viewBox="0 0 24 24"><path d="M6.6 3.5h3l1.5 4-2 1.3a11 11 0 0 0 6.1 6.1l1.3-2 4 1.5v3c0 1-.8 1.8-1.8 1.8C10.4 19.2 4.8 13.6 4.8 5.3c0-1 .8-1.8 1.8-1.8z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>
+                <svg width="6" height="22" viewBox="0 0 6 24"><circle cx="3" cy="5" r="2" fill="#fff"/><circle cx="3" cy="12" r="2" fill="#fff"/><circle cx="3" cy="19" r="2" fill="#fff"/></svg>
+              </div>
+            </div>
+            <div class="chat" id="chat" aria-live="polite"></div>
+            <div class="wbar" aria-hidden="true">
+              <div class="inp">
+                <svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#8696a0" stroke-width="1.8"/><circle cx="9" cy="10" r="1.2" fill="#8696a0"/><circle cx="15" cy="10" r="1.2" fill="#8696a0"/><path d="M8.5 14.5c1.8 2 5.2 2 7 0" fill="none" stroke="#8696a0" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <span>Message</span>
+                <svg width="20" height="22" viewBox="0 0 24 24"><path d="M16.5 6.5 8.4 14.6a2 2 0 0 0 2.8 2.8l8.1-8.1a4 4 0 0 0-5.7-5.7l-8.1 8.1a6 6 0 0 0 8.5 8.5l6-6" fill="none" stroke="#8696a0" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="none" stroke="#8696a0" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.3" fill="none" stroke="#8696a0" stroke-width="1.8"/></svg>
+              </div>
+              <div class="mic"><svg width="20" height="22" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="#fff"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="home" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="pBot">
+      <div class="card">
+        <button class="botcard" id="brainCard" type="button">
+          <span class="bav" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="11" rx="3.5" fill="#fff"/><circle cx="9" cy="13.5" r="1.6" fill="#075491"/><circle cx="15" cy="13.5" r="1.6" fill="#075491"/><path d="M12 8V5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="4" r="1.6" fill="#fff"/></svg></span>
+          <span><span class="bn">firstbriq bot</span><br><span class="bs">Online · member of “HSR 3BHK – Site” · 15 rules · 13 APIs</span></span>
+          <span class="go">Open bot brain</span>
+        </button>
+        <div class="ch"><h2>Bot console</h2><span class="hint">Live steps per message · click any row for its trace</span></div>
+        <div class="scroll log" id="log"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="pErp">
+      <div class="card">
+        <div class="erpbar"><span class="logo" aria-hidden="true">S</span><span class="an">SiteBooks ERP</span><span class="proj">PRJ-104 · HSR 3BHK ▾</span></div>
+        <div class="scroll erp" id="erp"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="backdrop" id="backdrop" hidden></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-labelledby="dTitle" role="dialog">
+  <div class="dh"><h2 id="dTitle">Trace</h2><button class="btn" id="dClose" type="button">Close ✕</button></div>
+  <div class="dtabs" id="dTabs" hidden></div>
+  <div class="db" id="dBody"></div>
+</aside>
+
+<script>
+(function(){
+'use strict';
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const inr = n => n == null ? '—' : '₹' + Number(n).toLocaleString('en-IN');
+const J = o => esc(JSON.stringify(o, null, 2));
+const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- people ---------- */
+const P = {
+  arjun:{n:'Arjun', r:'Project manager', c:'var(--n-arjun)'},
+  neha:{n:'Neha', r:'Designer', c:'var(--n-neha)'},
+  suresh:{n:'Suresh', r:'Carpenter', c:'var(--n-suresh)'},
+  raju:{n:'Raju', r:'Raju Traders · ply', c:'var(--n-raju)'},
+  imran:{n:'Imran', r:'Electrician', c:'var(--n-imran)'},
+  manju:{n:'Manju', r:'Sri Lakshmi Tiles', c:'var(--n-manju)'},
+  deepak:{n:'Deepak', r:'Deepak Hardware', c:'var(--n-deepak)'},
+  rao:{n:'Mrs. Rao', r:'Homeowner', c:'var(--n-rao)'},
+  ravi:{n:'Ravi', r:'Painter', c:'var(--n-ravi)'},
+  vikram:{n:'Vikram', r:'Merino Gallery · laminates', c:'var(--n-vikram)'}
+};
+
+/* ---------- decision rules ---------- */
+const RULES = {
+  auto:    {label:'Auto-post', cls:'v-auto', when:'Bill or clear message; items add up; vendor and project known; rate normal; below ₹50,000', action:'Post to ERP and confirm in the group'},
+  claimed: {label:'Claimed', cls:'v-ask', when:'Purchase mentioned in text or voice, but no bill yet', action:'Save as “claimed”; wait for the bill'},
+  resolve: {label:'Resolved', cls:'v-auto', when:'Someone answers a question the bot asked', action:'Complete the earlier record'},
+  limit:   {label:'PM review · limit', cls:'v-pm', when:'Amount above ₹50,000', action:'Save as draft; PM approves'},
+  rate:    {label:'PM review · rate', cls:'v-pm', when:'Rate outside the usual range (±25% of last 90 days)', action:'Save as draft; show PM both numbers'},
+  payreq:  {label:'PM review · payment', cls:'v-pm', when:'Someone asks for money', action:'Never auto-approve; PM decides'},
+  change:  {label:'PM review · change', cls:'v-pm', when:'Scope change from homeowner or designer', action:'PM decides; bot only acknowledges'},
+  attach:  {label:'Attached', cls:'v-pm', when:'Bill for an item already waiting for the PM', action:'Attach bill to the review item'},
+  ask:     {label:'Ask sender', cls:'v-ask', when:'Project, vendor or amount unclear', action:'Ask one short question in their language'},
+  correct: {label:'Correction', cls:'v-ask', when:'Sender changes an earlier number', action:'Update the record, keep history'},
+  status:  {label:'Status reply', cls:'v-ask', when:'Question about a pending item', action:'Reply with status only'},
+  dup:     {label:'Duplicate', cls:'v-dup', when:'Same image hash, or same vendor + amount + date', action:'Do not count again'},
+  progress:{label:'Progress', cls:'v-auto', when:'Work done, site photo, or labour plan', action:'Add to the progress log'},
+  doc:     {label:'Filed', cls:'v-ignore', when:'Design file or quotation (not a cost)', action:'Save to documents'},
+  ignore:  {label:'Ignore', cls:'v-ignore', when:'Greetings, “ok”, emoji', action:'Keep as context only'}
+};
+const PM_RULES = ['limit','rate','payreq','change'];
+
+/* ---------- the scripted day ---------- */
+const MSG = [
+{t:'08:05', from:'arjun', kind:'text', text:'Good morning team 🙏 Aaj kitchen aur master bedroom pe kaam hai.',
+ json:{intent:'chit_chat', context:'today: kitchen, master bedroom'},
+ checks:[[1,'No item, amount or request found']], rule:'ignore', why:'Greeting. Nothing to record; kept as context for later messages.', erp:[], ops:[], reply:null},
+
+{t:'08:12', from:'raju', kind:'text', text:'Bhai 16 sheet 18mm BWP bhej diya HSR site pe, 2700 rate, total 43200. Bill shaam ko bhejta hu',
+ json:{project:'PRJ-104 HSR 3BHK', intent:'material_purchase', vendor:{raw:'Raju', id:'V-221', match:0.96}, items:[{name:'BWP plywood 18mm', qty:16, unit:'sheet', rate:2700, amount:43200}], total:43200, evidence:'text only'},
+ checks:[[1,'16 × 2,700 = 43,200 (adds up)'],[1,'Vendor matched: Raju Traders (V-221)'],[1,'Rate ₹2,700 within usual ₹2,500–2,900'],[0,'No bill yet']],
+ rule:'claimed', why:'Numbers are fine but there is no bill. Saved as “claimed”, waiting for the bill.', lookups:['vendors?search=raju'],
+ erp:[['POST','/api/purchases',{project_id:'PRJ-104',vendor_id:'V-221',items:[{name:'BWP plywood 18mm',qty:16,rate:2700}],total:43200,status:'claimed'},{purchase_id:'PUR-301',status:'claimed'}]],
+ ops:[{op:'pur', id:'PUR-301', vendor:'Raju Traders', item:'BWP ply 18mm', qty:'16 sheet', amount:43200, status:'claimed'}],
+ reply:{to:'group', text:'Noted ✔ 16 sheets 18mm BWP, ₹43,200 (Raju Traders). Bill aane par final karenge.'}},
+
+{t:'08:30', from:'suresh', kind:'voice', dur:'0:23',
+ transcript:{orig:'Sir kitchen ka carcass ho gaya, kal se shutter lagayenge, pandrah hazaar advance chahiye', lang:'Hindi-English (code-mixed)', en:'Sir, the kitchen carcass is done, we start shutters tomorrow, need ₹15,000 advance'},
+ json:{project:'PRJ-104', events:[{intent:'progress', room:'Kitchen', stage:'Carcass done'},{intent:'payment_request', to:'Suresh (carpenter)', amount:15000, reason:'Advance for shutters'}]},
+ checks:[[1,'Sender is the carpenter on PRJ-104'],[1,'Progress: kitchen carcass done'],[0,'Payment request: never auto-approved']],
+ rule:'payreq', why:'Two things in one voice note. Progress is logged; the ₹15,000 advance goes to the PM.',
+ erp:[['POST','/api/progress',{project_id:'PRJ-104',room:'Kitchen',stage:'Carcass done',by:'Suresh'},{progress_id:'PRG-88'}],
+      ['POST','/api/review-queue',{project_id:'PRJ-104',type:'payment_request',to:'Suresh',amount:15000,reason:'Advance for shutters'},{review_id:'RV-11',status:'pending'}]],
+ ops:[{op:'prog', room:'Kitchen', note:'Carcass done', by:'Suresh'},{op:'rev', id:'RV-11', kind:'payment', who:'Suresh (carpenter)', title:'Advance to Suresh', detail:'For kitchen shutters. Voice note 08:30.', amount:15000}],
+ reply:{to:'pm', text:'Suresh: kitchen carcass done ✔. Asks ₹15,000 advance for shutters → Approve / Reject.'}},
+
+{t:'08:31', from:'arjun', kind:'text', text:'👍', json:{intent:'acknowledgement'}, checks:[[1,'Emoji only']], rule:'ignore', why:'Acknowledgement. Nothing to record.', erp:[], ops:[], reply:null},
+
+{t:'09:10', from:'manju', kind:'voice', dur:'0:17',
+ transcript:{orig:'Sir, tiles delivery maadidini, 40 box 2 by 2 vitrified, bill photo kaLisuttini', lang:'Kannada-English (code-mixed)', en:'Sir, I have delivered the tiles, 40 boxes of 2×2 vitrified, I will send the bill photo'},
+ json:{project:'PRJ-104', intent:'material_delivery', vendor:{raw:'Manju', id:'V-305', match:0.91}, items:[{name:'Vitrified tiles 2×2 ft', qty:40, unit:'box', amount:null}]},
+ checks:[[1,'Vendor matched: Sri Lakshmi Tiles (V-305)'],[0,'No amount yet'],[0,'No bill yet']],
+ rule:'claimed', why:'Delivery recorded without an amount. Waiting for the bill.',
+ erp:[['POST','/api/purchases',{project_id:'PRJ-104',vendor_id:'V-305',items:[{name:'Vitrified tiles 2x2',qty:40,unit:'box'}],status:'claimed'},{purchase_id:'PUR-302',status:'claimed'}]],
+ ops:[{op:'pur', id:'PUR-302', vendor:'Sri Lakshmi Tiles', item:'Vitrified tiles 2×2', qty:'40 box', amount:null, status:'claimed'}],
+ reply:{to:'group', text:'Noted ✔ 40 boxes 2×2 vitrified tiles (Sri Lakshmi Tiles). Bill photo kalisi, dhanyavaada 🙏'}},
+
+{t:'09:14', from:'manju', kind:'photo', bill:{shop:'Sri Lakshmi Tiles', lines:['Vitrified 2×2 GVT  40 box × 1,150 = 46,000','GST 18% = 8,280'], total:'54,280'},
+ json:{project:'PRJ-104', intent:'material_purchase', vendor:{id:'V-305'}, items:[{name:'Vitrified tiles 2×2',qty:40,unit:'box',rate:1150,amount:46000}], gst:8280, total:54280, matches:'PUR-302'},
+ checks:[[1,'40 × 1,150 = 46,000; + GST 8,280 = 54,280'],[1,'Matches the 09:10 delivery (PUR-302)'],[1,'Rate within usual ₹1,000–1,300'],[0,'₹54,280 is above the ₹50,000 auto-post limit']],
+ rule:'limit', why:'Everything checks out, but the amount is above the auto-post limit, so the PM approves it.',
+ erp:[['PATCH','/api/purchases/PUR-302',{rate:1150,gst:8280,total:54280,status:'needs_approval',bill_doc:'DOC-71'},{purchase_id:'PUR-302',status:'needs_approval'}],
+      ['POST','/api/review-queue',{type:'purchase',purchase_id:'PUR-302',amount:54280,reason:'Above auto-post limit'},{review_id:'RV-12',status:'pending'}]],
+ ops:[{op:'pur', id:'PUR-302', amount:54280, status:'needs approval'},{op:'doc', name:'Bill – Sri Lakshmi Tiles.jpg', type:'Bill', from:'Manju'},
+      {op:'rev', id:'RV-12', kind:'purchase', ref:'PUR-302', title:'Tiles bill, Sri Lakshmi Tiles', detail:'40 box × ₹1,150 + GST. Above the ₹50,000 limit.', amount:54280}],
+ reply:{to:'pm', text:'Tiles bill ₹54,280 (incl. GST) matches today’s delivery. Above ₹50k limit → please approve.'}},
+
+{t:'10:02', from:'imran', kind:'text', text:'wire ka 8500 hua, bill bhej raha hu',
+ json:{project:null, intent:'material_purchase', vendor:{raw:'Imran', id:'V-118'}, items:[{name:'wire', amount:8500}]},
+ checks:[[1,'Vendor matched: Imran, electrician (V-118)'],[0,'Imran works on 2 projects: HSR 3BHK and Whitefield villa'],[0,'Project unclear']],
+ rule:'ask', why:'Cannot tell which project. Asks one short question instead of guessing.', lookups:['projects?member=V-118'],
+ erp:[], ops:[], reply:{to:'group', text:'Imran ji, ye kaunse site ka hai? 1) HSR 3BHK  2) Whitefield villa'}},
+
+{t:'10:04', from:'imran', kind:'text', text:'HSR',
+ json:{intent:'answer', answers:'bot question 10:02', project:'PRJ-104'},
+ checks:[[1,'Reply to the bot’s question'],[1,'Project = HSR 3BHK (PRJ-104)']],
+ rule:'resolve', why:'The answer completes the 10:02 message. Wire purchase saved as claimed.',
+ erp:[['POST','/api/purchases',{project_id:'PRJ-104',vendor_id:'V-118',items:[{name:'Electrical wire',amount:8500}],status:'claimed'},{purchase_id:'PUR-303',status:'claimed'}]],
+ ops:[{op:'pur', id:'PUR-303', vendor:'Imran (electrician)', item:'Electrical wire', qty:'—', amount:8500, status:'claimed'}],
+ reply:{to:'group', text:'Thank you ✔ ₹8,500 wire noted for HSR 3BHK.'}},
+
+{t:'10:20', from:'imran', kind:'photo', bill:{shop:'Sai Electricals', lines:['Havells FR 2.5 sq mm  5 coil × 1,700 = 8,500'], total:'8,500'},
+ json:{project:'PRJ-104', intent:'material_purchase', items:[{name:'Havells FR wire 2.5 sq mm',qty:5,unit:'coil',rate:1700,amount:8500}], total:8500, matches:'PUR-303'},
+ checks:[[1,'5 × 1,700 = 8,500'],[1,'Matches claim PUR-303'],[1,'Rate within usual ₹1,500–1,900'],[1,'Below ₹50,000 limit']],
+ rule:'auto', why:'Bill matches the claim and every check passes. Posted automatically.',
+ erp:[['PATCH','/api/purchases/PUR-303',{items:[{name:'Havells FR wire 2.5 sq mm',qty:5,rate:1700}],total:8500,status:'posted',bill_doc:'DOC-72'},{purchase_id:'PUR-303',status:'posted'}]],
+ ops:[{op:'pur', id:'PUR-303', item:'Havells FR wire 2.5 sq mm', qty:'5 coil', status:'posted'},{op:'doc', name:'Bill – Sai Electricals.jpg', type:'Bill', from:'Imran'}],
+ reply:{to:'group', text:'Bill received ✔ ₹8,500 entered.'}},
+
+{t:'11:15', from:'neha', kind:'image', file:'Kitchen_elevation_v3.png', text:'Updated kitchen elevation, please follow this one',
+ json:{intent:'design_file', room:'Kitchen', version:'v3', supersedes:'v2'},
+ checks:[[1,'Design drawing, not a bill'],[1,'Replaces v2 for the kitchen']],
+ rule:'doc', why:'No cost. Filed under Documents → Kitchen as the latest version.',
+ erp:[['POST','/api/documents',{project_id:'PRJ-104',type:'design',room:'Kitchen',name:'Kitchen_elevation_v3.png',supersedes:'v2'},{doc_id:'DOC-73'}]],
+ ops:[{op:'doc', name:'Kitchen_elevation_v3.png', type:'Design (latest)', from:'Neha'}], reply:null},
+
+{t:'12:40', from:'raju', kind:'photo', bill:{shop:'Raju Traders', lines:['BWP 18mm (Century)  16 × 2,700 = 43,200'], total:'43,200'},
+ json:{intent:'material_purchase', vendor:{id:'V-221'}, items:[{name:'BWP plywood 18mm',qty:16,rate:2700,amount:43200}], total:43200, matches:'PUR-301'},
+ checks:[[1,'16 × 2,700 = 43,200'],[1,'Matches the 08:12 claim (PUR-301)'],[1,'Rate within usual range'],[1,'Below ₹50,000 limit']],
+ rule:'auto', why:'Bill matches the morning claim. Posted automatically.',
+ erp:[['PATCH','/api/purchases/PUR-301',{status:'posted',bill_doc:'DOC-74'},{purchase_id:'PUR-301',status:'posted'}]],
+ ops:[{op:'pur', id:'PUR-301', status:'posted'},{op:'doc', name:'Bill – Raju Traders.jpg', type:'Bill', from:'Raju'}],
+ reply:{to:'group', text:'Bill received ✔ ₹43,200 entered (Raju Traders).'}},
+
+{t:'12:41', from:'raju', kind:'photo', bill:{shop:'Raju Traders', lines:['BWP 18mm (Century)  16 × 2,700 = 43,200'], total:'43,200'}, isDup:true,
+ json:{intent:'material_purchase', duplicate_of:'12:40 message', image_hash_distance:0},
+ checks:[[0,'Same image as 12:40 (hash match)'],[1,'Not counted again']],
+ rule:'dup', why:'Exact same bill photo. Not counted twice.', erp:[], ops:[],
+ reply:{to:'group', text:'Ye bill pehle hi note ho gaya hai ✔'}},
+
+{t:'13:30', from:'raju', kind:'text', text:'Sorry bhai, 16 nahi 15 sheet gaya, ek wapas aa gaya. Revised 40500',
+ json:{intent:'correction', target:'PUR-301', change:{qty:{from:16,to:15}, total:{from:43200,to:40500}}},
+ checks:[[1,'15 × 2,700 = 40,500'],[1,'Refers to PUR-301 (same vendor, same item, today)'],[1,'Old value kept in history']],
+ rule:'correct', why:'Correction to an earlier entry. Updated; the old value stays in the history.',
+ erp:[['PATCH','/api/purchases/PUR-301',{items:[{name:'BWP plywood 18mm',qty:15,rate:2700}],total:40500,note:'1 sheet returned'},{purchase_id:'PUR-301',version:3}]],
+ ops:[{op:'pur', id:'PUR-301', qty:'15 sheet', amount:40500, was:'was 16 · ₹43,200'}],
+ reply:{to:'group', text:'Updated ✔ 15 sheets, ₹40,500.'}},
+
+{t:'14:05', from:'deepak', kind:'text', text:'HSR site: Hettich soft-close hinges 40 pcs @ 980 = 39,200',
+ json:{project:'PRJ-104', intent:'material_purchase', vendor:{id:'V-240'}, items:[{name:'Hettich soft-close hinge',qty:40,rate:980,amount:39200}]},
+ checks:[[1,'40 × 980 = 39,200'],[1,'Vendor matched: Deepak Hardware (V-240)'],[0,'Rate ₹980 vs usual ₹350–450 for this item']],
+ rule:'rate', why:'Rate is more than double the usual price. Sent to the PM with both numbers.',
+ erp:[['POST','/api/purchases',{project_id:'PRJ-104',vendor_id:'V-240',items:[{name:'Hettich soft-close hinge',qty:40,rate:980}],total:39200,status:'needs_approval'},{purchase_id:'PUR-304'}],
+      ['POST','/api/review-queue',{type:'purchase',purchase_id:'PUR-304',reason:'Rate far above usual'},{review_id:'RV-13',status:'pending'}]],
+ ops:[{op:'pur', id:'PUR-304', vendor:'Deepak Hardware', item:'Hettich soft-close hinge', qty:'40 pc', amount:39200, status:'needs approval'},
+      {op:'rev', id:'RV-13', kind:'purchase', ref:'PUR-304', title:'Hinges at ₹980 each', detail:'Usual ₹350–450. Check the model before approving.', amount:39200}],
+ reply:{to:'pm', text:'Hettich hinges at ₹980/pc (usual ₹350–450). Total ₹39,200 → please check.'}},
+
+{t:'14:30', from:'rao', kind:'text', text:'Arjun ji, master bedroom wardrobe mein loft bhi chahiye. Possible hai?',
+ json:{project:'PRJ-104', intent:'change_request', room:'Master bedroom', change:'Add loft to wardrobe', from:'Homeowner'},
+ checks:[[1,'Sender is the homeowner'],[0,'Scope change: cost and time impact unknown']],
+ rule:'change', why:'Scope change from the homeowner. The bot never decides this; the PM gets it with a summary.',
+ erp:[['POST','/api/review-queue',{type:'change_request',room:'Master bedroom',summary:'Add loft to wardrobe',by:'Homeowner'},{review_id:'RV-14',status:'pending'}]],
+ ops:[{op:'rev', id:'RV-14', kind:'change', title:'Change request: wardrobe loft', detail:'Master bedroom, from Mrs. Rao. Needs a quote.', amount:null}],
+ reply:{to:'group', text:'Noted 🙏 Arjun sir will confirm the loft cost and timeline.'}},
+
+{t:'15:00', from:'suresh', kind:'image', file:'IMG_2231.jpg', text:'Kitchen carcass fixed', site:true,
+ json:{intent:'progress_photo', room:'Kitchen', stage:'Carcass installed'},
+ checks:[[1,'Site photo; matches the 08:30 progress update']],
+ rule:'progress', why:'Photo proof for the kitchen stage. Added to the progress log.',
+ erp:[['POST','/api/progress',{project_id:'PRJ-104',room:'Kitchen',stage:'Carcass installed',photo:'DOC-75'},{progress_id:'PRG-89'}]],
+ ops:[{op:'prog', room:'Kitchen', note:'Carcass photo added', by:'Suresh'},{op:'doc', name:'IMG_2231.jpg', type:'Site photo', from:'Suresh'}], reply:null},
+
+{t:'15:45', from:'vikram', kind:'pdf', file:'Quotation_Laminates_HSR.pdf', pages:3,
+ json:{intent:'quotation', vendor:'Merino Gallery', lines:12, total:118400},
+ checks:[[1,'Quotation, not a bill'],[1,'Saved for comparison with other laminate quotes']],
+ rule:'doc', why:'A quote is not a cost yet. Stored and linked to the project for comparison.',
+ erp:[['POST','/api/documents',{project_id:'PRJ-104',type:'quotation',vendor:'Merino Gallery',total:118400},{doc_id:'DOC-76'}]],
+ ops:[{op:'doc', name:'Quotation_Laminates_HSR.pdf', type:'Quote ₹1,18,400', from:'Vikram'}], reply:null},
+
+{t:'16:30', from:'suresh', kind:'text', text:'Sir advance ka kya hua?', dyn:'RV-11',
+ json:{intent:'status_question', about:'RV-11'},
+ checks:[[1,'Linked to request RV-11 (₹15,000 advance)']],
+ rule:'status', why:'Question about a pending request. The bot reports the status; it does not approve.',
+ erp:[['GET','/api/review-queue/RV-11',null,{review_id:'RV-11',status:'pending'}]], ops:[],
+ reply:{to:'group', text:'Suresh ji, ₹15,000 advance request Arjun sir ke paas approval ke liye hai.'}},
+
+{t:'17:10', from:'ravi', kind:'voice', dur:'0:12',
+ transcript:{orig:'Kal se living room mein putty start karenge, chhe log aayenge', lang:'Hindi', en:'From tomorrow we start putty in the living room, six people will come'},
+ json:{intent:'labour_plan', room:'Living room', work:'Putty', workers:6, date:'tomorrow'},
+ checks:[[1,'Painter on PRJ-104'],[1,'Labour plan, no cost']],
+ rule:'progress', why:'Work plan for tomorrow. Logged so the PM sees who will be on site.',
+ erp:[['POST','/api/progress',{project_id:'PRJ-104',room:'Living room',stage:'Putty starts tomorrow',labour:6},{progress_id:'PRG-90'}]],
+ ops:[{op:'prog', room:'Living room', note:'Putty from tomorrow, 6 workers', by:'Ravi'}], reply:null},
+
+{t:'17:40', from:'arjun', kind:'text', text:'ok', json:{intent:'acknowledgement'}, checks:[[1,'Acknowledgement']], rule:'ignore', why:'Nothing to record.', erp:[], ops:[], reply:null},
+
+{t:'18:20', from:'deepak', kind:'photo', bill:{shop:'Deepak Hardware', lines:['Hettich Sensys soft-close 110°  40 × 980 = 39,200'], total:'39,200'},
+ json:{intent:'material_purchase', items:[{name:'Hettich Sensys soft-close 110°',qty:40,rate:980}], matches:'PUR-304'},
+ checks:[[1,'Matches PUR-304'],[1,'Bill names the model: Sensys (premium range)'],[0,'Still waiting for the PM (RV-13)']],
+ rule:'attach', why:'Bill attached to the pending review. The model name helps the PM decide.',
+ erp:[['PATCH','/api/purchases/PUR-304',{bill_doc:'DOC-77',model:'Sensys 110°'},{purchase_id:'PUR-304'}]],
+ ops:[{op:'doc', name:'Bill – Deepak Hardware.jpg', type:'Bill', from:'Deepak'},{op:'revnote', id:'RV-13', detail:'Bill says Sensys 110° (premium range), so the rate may be right.'}],
+ reply:{to:'pm', text:'Deepak’s bill says Hettich Sensys (premium). Added to the hinge review.'}}
+];
+const GAPS = [700,900,900,500,1000,700,1000,600,800,900,1000,500,900,1000,900,900,900,900,800,700];
+
+/* ---------- API catalogue (shown in Bot brain) ---------- */
+const APIS = [
+  {m:'POST', nm:'WhatsApp webhook (in)', url:'https://bot.example.com/webhooks/whatsapp', when:'Meta calls the bot for every new message, delivery and read receipt.', req:{object:'whatsapp_business_account',entry:[{changes:[{value:{messages:[{from:'91XXXXXXXXXX',id:'wamid.HSR002',type:'text',text:{body:'Bhai 16 sheet 18mm BWP…'}}]}}]}]}, res:'200 OK (reply fast; work happens in the queue)'},
+  {m:'GET', nm:'WhatsApp media download', url:'https://graph.facebook.com/v21.0/{media-id}', when:'Voice notes, photos and PDFs: fetch the file before reading it.', req:null, res:{url:'https://lookaside.fbsbx.com/…',mime_type:'audio/ogg'}},
+  {m:'POST', nm:'Sarvam speech-to-text', url:'https://api.sarvam.ai/speech-to-text', when:'Every voice note. Code-mixed mode for Hinglish and Kannada-English.', req:{file:'voice.ogg',model:'saaras (code-mix mode)',language_code:'auto'}, res:{transcript:'Sir kitchen ka carcass ho gaya…',language_code:'hi-IN'}},
+  {m:'POST', nm:'Vision model: read bill / classify image', url:'https://llm.example.com/v1/vision/extract', when:'Every photo and PDF. Reads line items from bills; tells bills apart from designs and site photos.', req:{image:'bill.jpg',schema:'bill_v1'}, res:{shop:'Raju Traders',lines:[{item:'BWP 18mm',qty:16,rate:2700}],total:43200}},
+  {m:'POST', nm:'LLM: understand + extract', url:'https://llm.example.com/v1/extract', when:'Every message. Fills a fixed JSON schema using the message, transcript and the last 20 messages as context.', req:{schema:'erp_event_v1',text:'…',context:'last 20 messages + open items'}, res:{intent:'material_purchase',items:['…'],total:43200}},
+  {m:'GET', nm:'ERP master data lookup', url:'https://erp.example.com/api/vendors?search=raju', when:'Match “Raju bhaiya”, “plywood wala” to a vendor; find which projects a person works on.', req:null, res:{vendors:[{id:'V-221',name:'Raju Traders',usual_rates:{'BWP 18mm':[2500,2900]}}]}},
+  {m:'INT', nm:'Duplicate check (bot database)', url:'internal: image_hash.lookup(dhash)', when:'Every bill photo, and every purchase (vendor + amount + date).', req:{dhash:'f3a1…'}, res:{match:'wamid.HSR011',distance:0}},
+  {m:'POST', nm:'ERP: create purchase', url:'https://erp.example.com/api/purchases', when:'New purchase (claimed, draft or posted). Header Idempotency-Key = WhatsApp message id.', req:{project_id:'PRJ-104',vendor_id:'V-221',items:['…'],total:43200,status:'claimed'}, res:{purchase_id:'PUR-301'}},
+  {m:'PATCH', nm:'ERP: update purchase', url:'https://erp.example.com/api/purchases/{id}', when:'Bill arrives, correction, PM decision. Old values kept as versions.', req:{total:40500,note:'1 sheet returned'}, res:{purchase_id:'PUR-301',version:3}},
+  {m:'POST', nm:'ERP: review queue', url:'https://erp.example.com/api/review-queue', when:'Anything the PM must decide: payments, above limit, odd rates, scope changes.', req:{type:'payment_request',amount:15000}, res:{review_id:'RV-11',status:'pending'}},
+  {m:'POST', nm:'ERP: progress log', url:'https://erp.example.com/api/progress', when:'Work done, site photos, labour plans.', req:{room:'Kitchen',stage:'Carcass done'}, res:{progress_id:'PRG-88'}},
+  {m:'POST', nm:'ERP: documents', url:'https://erp.example.com/api/documents', when:'Bills, designs, quotations, site photos.', req:{type:'quotation',name:'Quotation_Laminates_HSR.pdf'}, res:{doc_id:'DOC-76'}},
+  {m:'POST', nm:'WhatsApp send message (out)', url:'https://graph.facebook.com/v21.0/{phone-number-id}/messages', when:'Short confirmations and questions in the group; private notes to the PM.', req:{messaging_product:'whatsapp',to:'{group or PM}',type:'text',text:{body:'Noted ✔ …'}}, res:{messages:[{id:'wamid.OUT…'}]}}
+];
+
+const DATAMAP = [
+  ['vendor name (“Raju”, “plywood wala”)','Vendors (master data)','matched to V-221; new ones need PM confirmation'],
+  ['items, qty, unit, rate, amount','Purchases → line items','PUR-301: 15 × BWP 18mm @ 2,700'],
+  ['total, GST','Purchases → totals','₹54,280 incl. GST'],
+  ['status (claimed / draft / posted)','Purchases → status','posted only after checks or PM approval'],
+  ['payment request','Review queue → Payments','RV-11: ₹15,000 to Suresh'],
+  ['scope change','Review queue → Change log','RV-14: wardrobe loft'],
+  ['room, stage, labour','Progress log','Kitchen · carcass done'],
+  ['bill / design / quote file','Documents','DOC-74 linked to PUR-301'],
+  ['WhatsApp message id','Audit trail + idempotency key','every row links to its message'],
+  ['project','Every record (project_id)','PRJ-104 HSR 3BHK']
+];
+
+const SETTINGS = [
+  ['Auto-post limit','₹50,000 (anything above → PM)'],
+  ['Rate check','±25% of the last 90 days for that item and vendor'],
+  ['Minimum match confidence','0.85 for vendor and project; below → ask'],
+  ['Languages','Hindi, Kannada, English, and mixes of them'],
+  ['Project','PRJ-104 · HSR 3BHK · Mrs. Rao · budget ₹9,50,000'],
+  ['Known vendors','Raju Traders (ply), Sri Lakshmi Tiles, Sai Electricals / Imran, Deepak Hardware, Merino Gallery'],
+  ['PM','Arjun (gets private notes and the daily summary)'],
+  ['Group access','Groups this size need forward-to-bot or a linked device; the official Groups API allows up to 8 members']
+];
+
+/* ---------- state ---------- */
+const BUDGET = 950000, BEFORE = 612000;
+let S, idx, playing, loopOn, busy, speed = 1, gen = 0, traces, sel = null;
+function fresh(){
+  S = {pur:{}, purOrder:[], pay:[], prog:[], rev:[], docs:[], counts:{}, flash:new Set(), digest:false};
+  Object.keys(RULES).forEach(k => S.counts[k] = 0);
+  idx = 0; playing = false; busy = false; traces = [];
+}
+
+/* ---------- sleep that stops on reset ---------- */
+function sleep(ms, g){
+  const d = reduce ? Math.min(ms, 120) : ms;
+  return new Promise((res, rej) => setTimeout(() => g === gen ? res() : rej('reset'), d / speed));
+}
+
+/* ---------- build the trace for message i ---------- */
+function stepsFor(m){
+  const s = ['Received'];
+  if (m.kind === 'voice') s.push('Speech → text');
+  if (m.kind === 'photo' || m.kind === 'image' || m.kind === 'pdf') s.push('Read file');
+  s.push('Understand');
+  if (m.isDup) s.push('Duplicate check');
+  s.push('Match vendor / project', 'Decide');
+  if (m.erp.length) s.push('ERP API');
+  if (m.reply) s.push(m.reply.to === 'pm' ? 'Note to PM' : 'Reply');
+  return s;
+}
+function effective(m){
+  const e = Object.assign({}, m);
+  if (m.dyn){
+    const r = S.rev.find(x => x.id === m.dyn);
+    if (r && r.status !== 'pending'){
+      const ok = r.status === 'approved';
+      e.erp = [['GET','/api/review-queue/' + m.dyn, null, {review_id:m.dyn, status:r.status}]];
+      e.reply = {to:'group', text: ok ? 'Suresh ji, ₹15,000 advance approve ho gaya ✔' : 'Suresh ji, Arjun sir advance ke baare mein aapse baat karenge.'};
+      e.why = 'Question about a request the PM has already ' + r.status + '. The bot reports that.';
+    }
+  }
+  return e;
+}
+function apiCalls(m, i){
+  const id = 'wamid.HSR' + String(i + 1).padStart(3, '0');
+  const type = m.kind === 'photo' || m.kind === 'image' ? 'image' : m.kind === 'pdf' ? 'document' : m.kind === 'voice' ? 'audio' : 'text';
+  const calls = [];
+  const msgBody = type === 'text' ? {text:{body:m.text}} : {[type]:{id:'MEDIA_' + (i + 1)}};
+  calls.push({m:'POST', nm:'WhatsApp webhook (in)', url:'https://bot.example.com/webhooks/whatsapp', req:{messages:[Object.assign({from:P[m.from].n + ' (+91…)', id, timestamp:m.t, type}, msgBody)]}, res:'200 OK'});
+  if (type !== 'text') calls.push({m:'GET', nm:'WhatsApp media download', url:'https://graph.facebook.com/v21.0/MEDIA_' + (i + 1), req:null, res:{mime_type: type === 'audio' ? 'audio/ogg' : type === 'document' ? 'application/pdf' : 'image/jpeg'}});
+  if (m.kind === 'voice') calls.push({m:'POST', nm:'Sarvam speech-to-text', url:'https://api.sarvam.ai/speech-to-text', req:{file:'voice_' + (i + 1) + '.ogg', mode:'code-mix'}, res:{transcript:m.transcript.orig, language:m.transcript.lang}});
+  if (m.kind === 'photo') calls.push({m:'POST', nm:'Vision model: read bill', url:'https://llm.example.com/v1/vision/extract', req:{image:'bill_' + (i + 1) + '.jpg', schema:'bill_v1'}, res:{shop:m.bill.shop, lines:m.bill.lines, total:m.bill.total}});
+  if (m.kind === 'image') calls.push({m:'POST', nm:'Vision model: classify image', url:'https://llm.example.com/v1/vision/classify', req:{image:m.file}, res:{type: m.site ? 'site_photo' : 'design_drawing'}});
+  if (m.kind === 'pdf') calls.push({m:'POST', nm:'Document reader', url:'https://llm.example.com/v1/vision/extract', req:{file:m.file, pages:m.pages}, res:{type:'quotation', vendor:m.json.vendor, total:m.json.total}});
+  calls.push({m:'POST', nm:'LLM: understand + extract', url:'https://llm.example.com/v1/extract', req:{schema:'erp_event_v1', text: m.kind === 'voice' ? m.transcript.en : (m.text || '(file)'), context:'last 20 messages + open items'}, res:m.json});
+  if (m.isDup) calls.push({m:'INT', nm:'Duplicate check (bot database)', url:'internal: image_hash.lookup', req:{dhash:'f3a1c0…'}, res:{match:'wamid.HSR011', distance:0}});
+  (m.lookups || []).forEach(q => calls.push({m:'GET', nm:'ERP master data lookup', url:'https://erp.example.com/api/' + q, req:null, res: q.indexOf('projects') === 0 ? {projects:['PRJ-104 HSR 3BHK','PRJ-097 Whitefield villa']} : {vendors:[{id:'V-221', name:'Raju Traders'}]}}));
+  m.erp.forEach(c => calls.push({m:c[0], nm:'ERP API', url:'https://erp.example.com' + c[1], hdr: c[0] === 'GET' ? null : 'Idempotency-Key: ' + id, req:c[2], res:c[3]}));
+  if (m.reply) calls.push({m:'POST', nm: m.reply.to === 'pm' ? 'WhatsApp: private note to PM' : 'WhatsApp: reply in group', url:'https://graph.facebook.com/v21.0/{phone-number-id}/messages', req:{messaging_product:'whatsapp', to: m.reply.to === 'pm' ? 'Arjun (PM)' : 'HSR 3BHK – Site', type:'text', text:{body:m.reply.text}}, res:{messages:[{id:'wamid.OUT' + String(i + 1).padStart(3, '0')}]}});
+  return calls;
+}
+
+/* ---------- apply ERP operations ---------- */
+function applyOps(ops, i){
+  ops.forEach(o => {
+    if (o.op === 'pur'){
+      let r = S.pur[o.id];
+      if (!r){ r = S.pur[o.id] = {id:o.id, msgs:[]}; S.purOrder.push(o.id); }
+      ['vendor','item','qty','amount','status','was'].forEach(k => { if (o[k] !== undefined) r[k] = o[k]; });
+      r.msgs.push(i); S.flash.add(o.id);
+    } else if (o.op === 'prog'){
+      S.prog.push({t:MSG[i].t, room:o.room, note:o.note, by:o.by, msgs:[i], key:'prog' + S.prog.length}); S.flash.add('prog' + (S.prog.length - 1));
+    } else if (o.op === 'doc'){
+      S.docs.push({name:o.name, type:o.type, from:o.from, msgs:[i], key:'doc' + S.docs.length}); S.flash.add('doc' + (S.docs.length - 1));
+    } else if (o.op === 'rev'){
+      S.rev.push({id:o.id, kind:o.kind, ref:o.ref, who:o.who, title:o.title, detail:o.detail, amount:o.amount, status:'pending', msgs:[i]}); S.flash.add(o.id);
+    } else if (o.op === 'revnote'){
+      const r = S.rev.find(x => x.id === o.id); if (r){ r.note = o.detail; r.msgs.push(i); S.flash.add(o.id); }
+    }
+  });
+}
+function decide(id, ok){
+  const r = S.rev.find(x => x.id === id); if (!r || r.status !== 'pending') return;
+  r.status = ok ? 'approved' : 'rejected';
+  if (r.kind === 'purchase' && S.pur[r.ref]){ S.pur[r.ref].status = ok ? 'posted' : 'rejected'; S.flash.add(r.ref); }
+  if (r.kind === 'payment'){ S.pay.push({who:r.who, amount:r.amount, reason:r.title, status:r.status, msgs:r.msgs.slice(), key:'pay' + S.pay.length}); S.flash.add('pay' + (S.pay.length - 1)); }
+  if (r.kind === 'change' && ok){ S.prog.push({t:'PM', room:'Master bedroom', note:'Change approved: wardrobe loft (quote to follow)', by:'Arjun', msgs:r.msgs.slice(), key:'prog' + S.prog.length}); S.flash.add('prog' + (S.prog.length - 1)); }
+  addSysEntry('PM ' + r.status + ' ' + r.id, r.title + (r.amount ? ' · ' + inr(r.amount) : '') + '. ERP: PATCH /api/review-queue/' + r.id + ' {status: "' + r.status + '"}');
+  renderERP(); renderCounters();
+}
+
+/* ---------- money ---------- */
+function money(){
+  let today = 0, pend = 0;
+  S.purOrder.forEach(id => { const r = S.pur[id]; if (r.amount == null) return; if (r.status === 'posted') today += r.amount; else if (r.status === 'needs approval' || r.status === 'claimed') pend += r.amount; });
+  S.pay.forEach(p => { if (p.status === 'approved') today += p.amount; });
+  S.rev.forEach(r => { if (r.kind === 'payment' && r.status === 'pending') pend += r.amount; });
+  return {today, pend};
+}
+
+/* ---------- rendering ---------- */
+function renderCounters(){
+  const c = S.counts, sum = ks => ks.reduce((a, k) => a + c[k], 0);
+  const seen = idx, recorded = seen - c.ignore - c.dup;
+  $('#counters').innerHTML =
+    ctr('', 'Messages', seen + ' / ' + MSG.length) +
+    ctr('c-auto', 'Auto-posted', c.auto) +
+    ctr('c-ask', 'Claimed, waiting for bill', c.claimed + c.resolve) +
+    ctr('c-pm', 'Sent to PM', sum(PM_RULES)) +
+    ctr('c-ask', 'Asked sender', c.ask) +
+    ctr('c-dup', 'Duplicates stopped', c.dup) +
+    ctr('', 'Ignored', c.ignore) +
+    ctr('', 'PM typing saved (est.)', '~' + Math.max(0, recorded) * 2 + ' min');
+}
+const ctr = (cls, k, v) => '<span class="ctr ' + cls + '">' + k + ' <b>' + v + '</b></span>';
+
+/* ---------- phone rendering ---------- */
+let lastSender = null;
+const DRAWING = '<svg class="drawing" viewBox="0 0 250 185" role="img" aria-label="Kitchen elevation drawing"><rect width="250" height="185" fill="#fff"/>' +
+  '<g fill="none" stroke="#1d4ed8" stroke-width="1.2"><rect x="20" y="22" width="210" height="44"/><path d="M62 22v44M104 22v44M146 22v44M188 22v44"/>' +
+  '<rect x="20" y="104" width="210" height="52"/><path d="M20 104h210M76 104v52M132 104v52M188 104v52"/><rect x="20" y="98" width="210" height="6"/>' +
+  '<rect x="95" y="70" width="40" height="18"/><path d="M102 98v-6M128 98v-6"/><circle cx="160" cy="101" r="0"/></g>' +
+  '<g stroke="#64748b" stroke-width=".7"><path d="M20 168h210M20 164v8M230 164v8M240 22v134M236 22h8M236 156h8"/></g>' +
+  '<g font-family="Helvetica,Arial" font-size="7.5" fill="#334155"><text x="108" y="178">3000</text><text x="243" y="92" transform="rotate(90 243 92)">2100</text>' +
+  '<text x="22" y="14" font-size="8" font-weight="700" fill="#0f172a">KITCHEN ELEVATION A · v3</text><text x="168" y="14">Scale 1:25</text>' +
+  '<text x="100" y="82" font-size="6.5">CHIMNEY</text><text x="30" y="133" font-size="6.5">TALL UNIT</text><text x="140" y="133" font-size="6.5">DRAWERS</text></g></svg>';
+const SITEPHOTO = '<svg class="sitephoto" viewBox="0 0 250 185" role="img" aria-label="Site photo: kitchen carcass installed">' +
+  '<defs><linearGradient id="wall" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9e3d8"/><stop offset="1" stop-color="#c9c0b1"/></linearGradient>' +
+  '<linearGradient id="ply" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9b88a"/><stop offset="1" stop-color="#b98f5b"/></linearGradient>' +
+  '<radialGradient id="light" cx=".8" cy=".2" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>' +
+  '<rect width="250" height="185" fill="url(#wall)"/><rect y="140" width="250" height="45" fill="#9ca3af"/><path d="M0 140h250" stroke="#7b818a"/>' +
+  '<rect x="186" y="18" width="48" height="56" fill="#f8fafc" stroke="#8b8f96" stroke-width="3"/><path d="M210 18v56M186 46h48" stroke="#8b8f96" stroke-width="2"/>' +
+  '<g stroke="#8a6438" stroke-width="2"><rect x="18" y="20" width="150" height="44" fill="url(#ply)"/><path d="M68 20v44M118 20v44"/>' +
+  '<rect x="14" y="92" width="172" height="52" fill="url(#ply)"/><path d="M71 92v52M128 92v52"/></g>' +
+  '<g fill="#a07644" opacity=".55"><rect x="22" y="24" width="42" height="36"/><rect x="72" y="24" width="42" height="36"/><rect x="122" y="24" width="42" height="36"/><rect x="18" y="96" width="49" height="44"/><rect x="75" y="96" width="49" height="44"/><rect x="132" y="96" width="50" height="44"/></g>' +
+  '<rect x="196" y="120" width="36" height="22" fill="#6b7280"/><path d="M196 120l10-8h26l-10 8z" fill="#9ca3af"/><rect width="250" height="185" fill="url(#light)"/>' +
+  '<rect width="250" height="185" fill="#000" opacity=".04"/></svg>';
+
+window.SITEPHOTO_FALLBACK = SITEPHOTO;
+function initial(n){ return n.replace('Mrs. ', '').charAt(0); }
+function waveBars(seed){
+  let h = '<i class="dot"></i>';
+  for (let k = 0; k < 28; k++){ const v = 5 + Math.abs(Math.sin(seed * 7.3 + k * 1.7) * 18 + Math.cos(k * .9 + seed) * 5); h += '<i style="height:' + Math.min(26, v).toFixed(0) + 'px"></i>'; }
+  return h;
+}
+function billPaper(b, t){
+  const addr = {'Raju Traders':'Plywood · Laminates · HSR Layout', 'Sri Lakshmi Tiles':'Tiles & Sanitary · Agara', 'Sai Electricals':'Wires · Switches · Koramangala', 'Deepak Hardware':'Hettich · Ebco · Hafele dealer'}[b.shop] || '';
+  return '<div class="photo" role="img" aria-label="Photo of a handwritten bill from ' + esc(b.shop) + '"><div class="paper">' +
+    '<div class="shop">' + esc(b.shop.toUpperCase()) + '</div><div class="addr">' + esc(addr) + '</div>' +
+    '<div class="no"><span>No. ' + (300 + t.length * 7) + '</span><span>Dt. 21/10</span></div>' +
+    b.lines.map(l => '<div>' + esc(l) + '</div>').join('') +
+    '<div class="tot">Total ₹ ' + esc(b.total) + '/-</div><div class="stamp">' + esc(b.shop.split(' ')[0].toUpperCase()) + '<br>★<br>BLR</div><div class="sign">' + esc(b.shop.split(' ')[0]) + '</div></div></div>';
+}
+function bubbleBody(m){
+  let h = '';
+  if (m.kind === 'text') h += '<div class="txt">' + esc(m.text) + '</div>';
+  if (m.kind === 'voice') h += '<div class="voice"><span class="vav" style="background:' + P[m.from].c + '">' + esc(initial(P[m.from].n)) +
+      '<span class="mic"><svg width="11" height="11" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="#53bdeb"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0" stroke="#53bdeb" stroke-width="2.4" fill="none"/></svg></span></span>' +
+      '<svg class="pb" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z" fill="#8696a0"/></svg><span class="wv" aria-hidden="true">' + waveBars(m.t.length + m.dur.length + m.from.length) + '</span></div>' +
+      '<div class="vdur">' + m.dur + '</div>';
+  if (m.kind === 'photo') h += billPaper(m.bill, m.t);
+  if (m.kind === 'image') h += (m.site ? '<img class="sitephoto" src="img/site-kitchen-carcass.jpg" alt="Site photo: kitchen cabinet carcass installed" onerror="this.outerHTML=SITEPHOTO_FALLBACK">' : DRAWING) + (m.text ? '<div class="cap">' + esc(m.text) + '</div>' : '');
+  if (m.kind === 'pdf') h += '<div class="docb"><svg width="30" height="36" viewBox="0 0 30 36" aria-hidden="true"><path d="M2 2h18l8 8v24H2z" fill="#fff" stroke="#d1d5db"/><path d="M20 2v8h8" fill="#e5e7eb" stroke="#d1d5db"/><rect x="0" y="18" width="24" height="11" rx="2" fill="#e53935"/><text x="12" y="26.5" text-anchor="middle" font-size="7.5" font-weight="700" fill="#fff" font-family="Helvetica,Arial">PDF</text></svg>' +
+      '<div><div class="nm">' + esc(m.file) + '</div><div class="sz">' + m.pages + ' pages · PDF · 412 kB</div></div></div>';
+  return h;
+}
+function to12(t){ const [hh, mm] = t.split(':').map(Number); return ((hh % 12) || 12) + ':' + String(mm).padStart(2, '0') + ' ' + (hh < 12 ? 'am' : 'pm'); }
+function addBubble(m, i){
+  const p = P[m.from], out = m.from === 'arjun', media = m.kind !== 'text';
+  const cont = lastSender === m.from; lastSender = m.from;
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'bub' + (out ? ' out' : '') + (cont ? ' cont' : '') + (media ? ' media' : ''); b.dataset.i = i;
+  b.setAttribute('aria-label', 'Message from ' + p.n + ' at ' + m.t + '. Open trace.');
+  b.innerHTML = (out || cont ? '' : '<div class="who" style="color:' + p.c + '">' + esc(p.n) + ' <span class="role">' + esc(p.r) + '</span></div>') +
+    bubbleBody(m) + '<span class="meta">' + to12(m.t) + (out ? ' <span class="tk">✓✓</span>' : '') + '</span>';
+  b.onclick = () => openTrace(i);
+  $('#chat').appendChild(b); scrollEnd('#chat');
+  $('#sbTime').textContent = to12(m.t).replace(/ (am|pm)/, '');
+}
+function addBotBubble(text, i, t){
+  const cont = lastSender === 'bot'; lastSender = 'bot';
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'bub' + (cont ? ' cont' : ''); b.dataset.i = i;
+  b.setAttribute('aria-label', 'Bot reply. Open trace.');
+  b.innerHTML = (cont ? '' : '<div class="who" style="color:var(--accent-text)">firstbriq bot <span class="botlbl">BOT</span></div>') +
+    '<div class="txt">' + esc(text) + '</div><span class="meta">' + to12(t) + '</span>';
+  b.onclick = () => openTrace(i);
+  $('#chat').appendChild(b); scrollEnd('#chat');
+}
+const GSUB = 'Arjun, Neha, Suresh, Raju, Imran, Manju, Deepak, Mrs. Rao, Ravi, Vikram, firstbriq bot';
+function showTyping(from){
+  const m = MSG[idx];
+  const verb = m && m.kind === 'voice' ? ' is recording audio…' : (m && m.kind !== 'text' ? ' is sending a file…' : ' is typing…');
+  $('#gsub').textContent = P[from].n + verb;
+}
+function hideTyping(){ $('#gsub').textContent = GSUB; }
+function scrollEnd(s){ const e = $(s); e.scrollTop = e.scrollHeight; }
+
+/* fit the fixed-size phone on narrow screens */
+function fitPhone(){
+  const w = $('#phwrap').clientWidth, d = $('#device');
+  const s = Math.min(1, w / 390);
+  d.style.transform = s < 1 ? 'scale(' + s.toFixed(3) + ')' : '';
+  $('#phwrap').style.height = s < 1 ? (800 * s) + 'px' : '';
+}
+window.addEventListener('resize', fitPhone);
+
+function addEntry(m, i){
+  const ph = $('#log .empty'); if (ph) ph.remove();
+  const e = document.createElement('button');
+  e.type = 'button'; e.className = 'entry'; e.dataset.i = i;
+  const kinds = {text:'text', voice:'voice', photo:'bill photo', image:'image', pdf:'pdf'};
+  e.innerHTML = '<div class="eh"><span>' + m.t + '</span><b>' + esc(P[m.from].n) + '</b><span class="kind">' + kinds[m.kind] + '</span></div>' +
+    '<div class="steps">' + stepsFor(m).map(s => '<span class="st">' + s + '</span>').join('') + '</div><div class="verd"><span class="pill v-ignore">working…</span></div>';
+  e.onclick = () => openTrace(i);
+  $('#log').appendChild(e); scrollEnd('#log');
+  return e;
+}
+function finishEntry(e, m){
+  const r = RULES[m.rule];
+  e.querySelector('.verd').innerHTML = '<span class="pill ' + r.cls + '">' + r.label + '</span><span>' + esc(m.why) + '</span>';
+  if (m.reply && m.reply.to === 'pm') e.insertAdjacentHTML('beforeend', '<div class="priv">🔒 Private note to Arjun (PM): ' + esc(m.reply.text) + '</div>');
+}
+function addSysEntry(title, body, list){
+  const ph = $('#log .empty'); if (ph) ph.remove();
+  const d = document.createElement('div'); d.className = 'entry sys';
+  d.innerHTML = '<h4>' + esc(title) + '</h4><div>' + esc(body) + '</div>' + (list ? '<ul>' + list.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>' : '');
+  $('#log').appendChild(d); scrollEnd('#log');
+}
+
+function tag(st){
+  const map = {'posted':'t-posted', 'approved':'t-approved', 'claimed':'t-claimed', 'needs approval':'t-needs', 'pending':'t-needs', 'rejected':'t-rejected'};
+  return '<span class="tag ' + (map[st] || 't-claimed') + '">' + esc(st) + '</span>';
+}
+function rowAttrs(key, msgs){ return ' data-m="' + msgs[msgs.length - 1] + '"' + (S.flash.has(key) ? ' class="flash"' : ''); }
+function renderERP(){
+  const mny = money();
+  const w = v => (Math.max(0, v) / BUDGET * 100).toFixed(2) + '%';
+  const pending = S.rev.filter(r => r.status === 'pending').length;
+  let h = '';
+  h += '<div class="box budget"><h3>Budget vs actual <span class="cnt">PRJ-104 HSR 3BHK</span><span class="api">GET /api/projects/PRJ-104/budget</span></h3>' +
+    '<div class="row"><span>Budget</span><b>' + inr(BUDGET) + '</b></div>' +
+    '<div class="bar" role="img" aria-label="Budget used"><i class="before" style="width:' + w(BEFORE) + '"></i><i class="today" style="width:' + w(mny.today) + '"></i><i class="pend" style="width:' + w(mny.pend) + '"></i></div>' +
+    '<div class="legend"><span class="l1">Spent before today ' + inr(BEFORE) + '</span><span class="l2">Posted today ' + inr(mny.today) + '</span><span class="l3">Waiting (claimed or PM) ' + inr(mny.pend) + '</span></div>' +
+    '<div class="row" style="margin-top:4px"><span>Left after posted spend</span><b>' + inr(BUDGET - BEFORE - mny.today) + '</b></div></div>';
+
+  h += '<div class="box"><h3>PM review queue <span class="cnt">' + pending + ' waiting</span><span class="api">/api/review-queue</span></h3>';
+  if (!S.rev.length) h += '<div class="none">Nothing yet. Payments, big amounts, odd rates and changes land here.</div>';
+  S.rev.forEach(r => {
+    h += '<div class="rv' + (r.status !== 'pending' ? ' done' : '') + (S.flash.has(r.id) ? ' flash' : '') + '"><div class="rt"><span>' + esc(r.id + ' · ' + r.title) + '</span><span>' + (r.amount ? inr(r.amount) : '') + '</span></div>' +
+      '<div class="rd">' + esc(r.detail) + (r.note ? '<br><b>Update:</b> ' + esc(r.note) : '') + '</div><div class="ra">' +
+      (r.status === 'pending' ? '<button type="button" class="btn ok" data-ok="' + r.id + '">Approve</button><button type="button" class="btn no" data-no="' + r.id + '">Reject</button>' : tag(r.status)) +
+      '<button type="button" class="btn" data-tr="' + r.msgs[0] + '">Source message</button></div></div>';
+  });
+  h += '</div>';
+
+  h += '<div class="box"><h3>Purchases <span class="cnt">' + S.purOrder.length + '</span><span class="api">/api/purchases</span></h3>';
+  if (!S.purOrder.length) h += '<div class="none">No purchases yet.</div>';
+  else {
+    h += '<div class="tbl"><table><thead><tr><th>ID</th><th>Vendor · item</th><th>Qty</th><th class="num">Amount</th><th>Status</th></tr></thead><tbody>';
+    S.purOrder.forEach(id => { const r = S.pur[id];
+      h += '<tr' + rowAttrs(id, r.msgs) + '><td>' + id + '</td><td>' + esc(r.vendor) + '<span class="was">' + esc(r.item) + '</span></td><td>' + esc(r.qty) + '</td><td class="num">' + inr(r.amount) + (r.was ? '<span class="was">' + esc(r.was) + '</span>' : '') + '</td><td>' + tag(r.status) + '</td></tr>'; });
+    h += '</tbody></table></div>';
+  }
+  h += '</div>';
+
+  h += '<div class="box"><h3>Payments <span class="cnt">' + S.pay.length + '</span><span class="api">/api/payments</span></h3>';
+  if (!S.pay.length) h += '<div class="none">Payments appear here only after the PM approves or rejects a request.</div>';
+  else { h += '<div class="tbl"><table><thead><tr><th>To</th><th>For</th><th class="num">Amount</th><th>Status</th></tr></thead><tbody>';
+    S.pay.forEach(p => { h += '<tr' + rowAttrs(p.key, p.msgs) + '><td>' + esc(p.who) + '</td><td>' + esc(p.reason) + '</td><td class="num">' + inr(p.amount) + '</td><td>' + tag(p.status) + '</td></tr>'; });
+    h += '</tbody></table></div>'; }
+  h += '</div>';
+
+  h += '<div class="box"><h3>Progress log <span class="cnt">' + S.prog.length + '</span><span class="api">/api/progress</span></h3>';
+  if (!S.prog.length) h += '<div class="none">No progress updates yet.</div>';
+  else { h += '<div class="tbl"><table><thead><tr><th>Time</th><th>Room</th><th>Update</th><th>By</th></tr></thead><tbody>';
+    S.prog.forEach(p => { h += '<tr' + rowAttrs(p.key, p.msgs) + '><td>' + esc(p.t) + '</td><td>' + esc(p.room) + '</td><td>' + esc(p.note) + '</td><td>' + esc(p.by) + '</td></tr>'; });
+    h += '</tbody></table></div>'; }
+  h += '</div>';
+
+  h += '<div class="box"><h3>Documents <span class="cnt">' + S.docs.length + '</span><span class="api">/api/documents</span></h3>';
+  if (!S.docs.length) h += '<div class="none">Bills, designs and quotes are filed here.</div>';
+  else { h += '<div class="tbl"><table><thead><tr><th>File</th><th>Type</th><th>From</th></tr></thead><tbody>';
+    S.docs.forEach(d => { h += '<tr' + rowAttrs(d.key, d.msgs) + '><td>' + esc(d.name) + '</td><td>' + esc(d.type) + '</td><td>' + esc(d.from) + '</td></tr>'; });
+    h += '</tbody></table></div>'; }
+  h += '</div>';
+
+  $('#erp').innerHTML = h;
+  S.flash.clear();
+}
+$('#erp').addEventListener('click', e => {
+  const t = e.target;
+  if (t.dataset.ok) return decide(t.dataset.ok, true);
+  if (t.dataset.no) return decide(t.dataset.no, false);
+  if (t.dataset.tr) return openTrace(+t.dataset.tr);
+  const tr = t.closest('tr[data-m]'); if (tr) openTrace(+tr.dataset.m);
+});
+
+/* ---------- the engine ---------- */
+async function processOne(g){
+  busy = true; updateButtons();
+  const i = idx, m0 = MSG[i];
+  try {
+    showTyping(m0.from); await sleep(650, g); hideTyping();
+    addBubble(m0, i);
+    const e = addEntry(m0, i);
+    idx++;
+    const m = effective(m0);
+    traces[i] = {m, calls: apiCalls(m, i)};
+    const chips = e.querySelectorAll('.st');
+    for (const c of chips){ await sleep(260, g); c.classList.add('on'); }
+    applyOps(m.ops, i);
+    S.counts[m.rule]++;
+    finishEntry(e, m);
+    renderERP(); renderCounters();
+    if (m.reply && m.reply.to === 'group'){ await sleep(350, g); addBotBubble(m.reply.text, i, m.t); }
+  } finally {
+    if (g === gen){ busy = false; updateButtons(); }
+  }
+  if (idx >= MSG.length) finish();
+}
+async function run(){
+  const g = gen; loopOn = true;
+  try {
+    while (playing && idx < MSG.length){
+      await processOne(g);
+      if (playing && idx < MSG.length) await sleep(GAPS[idx] || 800, g);
+    }
+  } catch (err) { /* reset */ }
+  if (g === gen){ loopOn = false; playing = false; updateButtons(); }
+}
+function finish(){
+  if (S.digest) return; S.digest = true;
+  const mny = money(), c = S.counts;
+  const waiting = S.rev.filter(r => r.status === 'pending');
+  const claimed = S.purOrder.filter(id => S.pur[id].status === 'claimed');
+  addSysEntry('19:30 · Daily summary sent privately to Arjun (PM)', 'WhatsApp: POST /messages to Arjun. Built from the ERP, not from the chat.', [
+    MSG.length + ' messages read; ' + (c.ignore + c.dup) + ' needed nothing',
+    'Posted today: ' + inr(mny.today),
+    waiting.length ? waiting.length + ' waiting for you: ' + waiting.map(r => r.id).join(', ') : 'Nothing waiting for you',
+    claimed.length ? 'Bills still missing: ' + claimed.join(', ') : 'No missing bills',
+    'Tomorrow: putty in living room (6 workers), kitchen shutters'
+  ]);
+  updateButtons();
+}
+
+/* ---------- controls ---------- */
+function updateButtons(){
+  $('#play').textContent = playing ? '❚❚ Pause' : (idx >= MSG.length ? '✓ Done' : (idx ? '▶ Resume' : '▶ Play'));
+  $('#play').disabled = idx >= MSG.length;
+  $('#step').disabled = playing || busy || idx >= MSG.length;
+}
+$('#play').onclick = () => {
+  if (playing){ playing = false; updateButtons(); return; }
+  if (idx >= MSG.length) return;
+  playing = true; updateButtons();
+  if (!loopOn) run();
+};
+$('#step').onclick = () => { if (!playing && !busy && idx < MSG.length) processOne(gen).catch(() => {}); };
+$('#reset').onclick = reset;
+document.querySelectorAll('.seg button').forEach(b => b.onclick = () => {
+  speed = +b.dataset.sp;
+  document.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+});
+function reset(){
+  gen++; loopOn = false; fresh(); closeDrawer();
+  lastSender = null; hideTyping(); $('#sbTime').textContent = '8:00';
+  $('#chat').innerHTML = '<div class="e2e">🔒 This is a scripted demo. Bot replies in this group come from “firstbriq bot”, a group member.</div><div class="daychip">Today</div>';
+  $('#log').innerHTML = '<div class="empty">Press ▶ Play to start the day, or Step ▸ to go one message at a time.<br>Click 🤖 Bot to see its rules, APIs and data map.</div>';
+  renderERP(); renderCounters(); updateButtons();
+}
+
+/* mobile tabs */
+document.querySelectorAll('.mtabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.mtabs button').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('show', p.id === b.dataset.p));
+});
+
+/* ---------- drawer ---------- */
+const drawer = $('#drawer'), backdrop = $('#backdrop');
+let lastFocus = null;
+function openDrawer(title){
+  lastFocus = document.activeElement;
+  $('#dTitle').textContent = title;
+  backdrop.hidden = false; drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false');
+  $('#dBody').scrollTop = 0; $('#dClose').focus();
+}
+function closeDrawer(){
+  drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true'); backdrop.hidden = true;
+  document.querySelectorAll('.sel').forEach(x => x.classList.remove('sel'));
+  if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
+}
+$('#dClose').onclick = closeDrawer; backdrop.onclick = closeDrawer;
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer(); });
+
+function callHTML(c, showWhen){
+  return '<div class="call"><div class="ch"><span class="nm">' + esc(c.nm) + '</span><span class="meth ' + c.m + '">' + (c.m === 'INT' ? 'INTERNAL' : c.m) + '</span><span class="url">' + esc(c.url) + '</span></div>' +
+    (showWhen && c.when ? '<div class="when">' + esc(c.when) + '</div>' : '') +
+    (c.hdr ? '<div class="when"><code>' + esc(c.hdr) + '</code></div>' : '') +
+    (c.req ? '<details class="raw"' + (showWhen ? '' : ' open') + '><summary>Request</summary><pre>' + J(c.req) + '</pre></details>' : '') +
+    '<details class="raw"' + (showWhen ? '' : ' open') + '><summary>Response</summary><pre>' + (typeof c.res === 'string' ? esc(c.res) : J(c.res)) + '</pre></details></div>';
+}
+function openTrace(i){
+  const tr = traces[i]; if (!tr) return;
+  const m = tr.m, r = RULES[m.rule], p = P[m.from];
+  $('#dTabs').hidden = true;
+  document.querySelectorAll('.sel').forEach(x => x.classList.remove('sel'));
+  document.querySelectorAll('[data-i="' + i + '"]').forEach(x => x.classList.add('sel'));
+  let h = '';
+  h += '<div class="sec"><div class="lbl">1 · What came in</div><div style="font-size:14px;color:var(--muted)">' + m.t + ' · ' + esc(p.n) + ' (' + esc(p.r) + ') · ' + m.kind + '</div><div class="bub" style="cursor:default;max-width:100%;margin-top:4px">' + bubbleBody(m) + '</div></div>';
+  if (m.transcript) h += '<div class="sec"><div class="lbl">2 · Speech to text (' + esc(m.transcript.lang) + ')</div><pre>' + esc(m.transcript.orig) + '</pre><div style="font-size:14px"><b>English:</b> ' + esc(m.transcript.en) + '</div></div>';
+  if (m.bill) h += '<div class="sec"><div class="lbl">2 · Bill read by the vision model</div><pre>' + J({shop:m.bill.shop, lines:m.bill.lines, total:m.bill.total}) + '</pre></div>';
+  h += '<div class="sec"><div class="lbl">3 · Extracted record (fixed schema)</div><pre>' + J(m.json) + '</pre></div>';
+  h += '<div class="sec"><div class="lbl">4 · Checks</div><ul class="checks">' + m.checks.map(c => '<li><span class="' + (c[0] ? 'y">✓' : 'x">✗') + '</span><span>' + esc(c[1]) + '</span></li>').join('') + '</ul></div>';
+  h += '<div class="sec"><div class="lbl">5 · Decision</div><div class="verd"><span class="pill ' + r.cls + '">' + r.label + '</span><span>' + esc(m.why) + '</span></div><div style="font-size:13px;color:var(--muted);margin-top:4px">Rule: when ' + esc(r.when.toLowerCase()) + ' → ' + esc(r.action.toLowerCase()) + '.</div></div>';
+  h += '<div class="sec"><div class="lbl">6 · API calls, in order (' + tr.calls.length + ')</div>' + tr.calls.map(c => callHTML(c, false)).join('') + '</div>';
+  h += '<div class="sec"><div class="lbl">7 · Where it landed in the ERP</div>' + (m.ops.length ? '<ul class="checks">' + m.ops.map(o => '<li><span class="y">→</span><span>' + esc(opText(o)) + '</span></li>').join('') + '</ul>' : '<div class="none">Nothing written to the ERP.</div>') + '</div>';
+  h += '<div class="sec"><div class="lbl">8 · Reply</div>' + (m.reply ? '<div class="' + (m.reply.to === 'pm' ? 'priv' : 'bub bot') + '" style="cursor:default;max-width:100%">' + (m.reply.to === 'pm' ? '🔒 Private to Arjun (PM): ' : '🤖 In the group: ') + esc(m.reply.text) + '</div>' : '<div class="none">No reply (keeps the group quiet).</div>') + '</div>';
+  $('#dBody').innerHTML = h;
+  openDrawer('Trace · ' + m.t + ' · ' + p.n);
+}
+function opText(o){
+  if (o.op === 'pur') return 'Purchases · ' + o.id + (o.status ? ' · status ' + o.status : '') + (o.amount != null ? ' · ' + inr(o.amount) : '') + (o.qty ? ' · qty ' + o.qty : '');
+  if (o.op === 'prog') return 'Progress log · ' + o.room + ' · ' + o.note;
+  if (o.op === 'doc') return 'Documents · ' + o.name + ' (' + o.type + ')';
+  if (o.op === 'rev') return 'PM review queue · ' + o.id + ' · ' + o.title + (o.amount ? ' · ' + inr(o.amount) : '');
+  if (o.op === 'revnote') return 'PM review queue · ' + o.id + ' · note added';
+  return o.op;
+}
+
+/* bot brain */
+const BTABS = [['rules','Decision rules'],['apis','APIs & tools'],['map','Data map'],['set','Settings']];
+function openBrain(tab){
+  tab = tab || 'rules';
+  const tabs = $('#dTabs');
+  tabs.hidden = false;
+  tabs.innerHTML = BTABS.map(t => '<button type="button" role="tab" data-bt="' + t[0] + '" aria-selected="' + (t[0] === tab) + '">' + t[1] + '</button>').join('');
+  tabs.querySelectorAll('button').forEach(b => b.onclick = () => { renderBrain(b.dataset.bt); tabs.querySelectorAll('button').forEach(x => x.setAttribute('aria-selected', String(x === b))); });
+  renderBrain(tab);
+  openDrawer('🤖 Bot brain');
+}
+function renderBrain(tab){
+  let h = '';
+  if (tab === 'rules'){
+    h += '<div class="flowline"><span>Message</span><em>→</em><span>Read</span><em>→</em><span>Extract</span><em>→</em><span>Check</span><em>→</em><span>Decide</span><em>→</em><span>ERP</span><em>→</em><span>Reply</span></div>';
+    h += '<p style="font-size:14px">Confidence comes from numbers that agree (items add up, bill = claim), then lookups (known vendor, normal rate), and only last from the model itself. Money never posts on a guess.</p>';
+    h += '<div class="tbl"><table class="rtab"><thead><tr><th>Decision</th><th>When</th><th>Action</th><th class="num">Fired</th></tr></thead><tbody>';
+    Object.keys(RULES).forEach(k => { const r = RULES[k]; h += '<tr style="cursor:default"><td><span class="pill ' + r.cls + '">' + r.label + '</span></td><td>' + esc(r.when) + '</td><td>' + esc(r.action) + '</td><td class="c">' + S.counts[k] + '</td></tr>'; });
+    h += '</tbody></table></div>';
+  } else if (tab === 'apis'){
+    h += '<p style="font-size:14px">Every connection the bot uses. The WhatsApp and Sarvam names are real services; the payloads here are simplified examples. LLM and ERP addresses are placeholders.</p>';
+    h += APIS.map(c => callHTML(c, true)).join('');
+  } else if (tab === 'map'){
+    h += '<p style="font-size:14px">Where each piece of a message ends up.</p><div class="tbl"><table class="rtab"><thead><tr><th>From the message</th><th>Goes to (ERP)</th><th>Example</th></tr></thead><tbody>';
+    DATAMAP.forEach(d => { h += '<tr style="cursor:default"><td>' + esc(d[0]) + '</td><td><b>' + esc(d[1]) + '</b></td><td>' + esc(d[2]) + '</td></tr>'; });
+    h += '</tbody></table></div><div class="quote" style="margin-top:12px">The ERP is the source of truth. The bot is a data-entry assistant that writes drafts through the API and lets the PM approve.</div>';
+  } else {
+    h += '<div class="tbl"><table class="rtab"><tbody>';
+    SETTINGS.forEach(s => { h += '<tr style="cursor:default"><th style="width:38%">' + esc(s[0]) + '</th><td>' + esc(s[1]) + '</td></tr>'; });
+    h += '</tbody></table></div>';
+  }
+  $('#dBody').innerHTML = h; $('#dBody').scrollTop = 0;
+}
+$('#brainCard').onclick = () => openBrain();
+
+/* theme: Auto (follows the computer) → Light → Dark */
+const THEMES = [['auto','◐ Auto'],['light','☀︎ Light'],['dark','☾ Dark']];
+function setTheme(t){
+  if (t === 'auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = t;
+  $('#theme').textContent = THEMES.find(x => x[0] === t)[1];
+  try { localStorage.setItem('botdemo_theme', t); } catch (e) {}
+}
+$('#theme').onclick = () => {
+  let cur = 'auto'; try { cur = localStorage.getItem('botdemo_theme') || 'auto'; } catch (e) {}
+  const i = THEMES.findIndex(x => x[0] === cur);
+  setTheme(THEMES[(i + 1) % THEMES.length][0]);
+};
+{ let t = 'auto'; try { t = localStorage.getItem('botdemo_theme') || 'auto'; } catch (e) {} setTheme(THEMES.some(x => x[0] === t) ? t : 'auto'); }
+
+/* go */
+reset();
+fitPhone();
+})();
+</script>
+</body>
+</html>
